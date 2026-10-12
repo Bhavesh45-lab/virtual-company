@@ -1,0 +1,10 @@
+# The running company: its conversations, memory, documents and backups stay on your PC.
+data/
+documents/
+social/
+backup/
+
+__pycache__/
+*.pyc
+.claude/
+*.log

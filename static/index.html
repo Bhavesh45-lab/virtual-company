@@ -1,0 +1,1811 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Company HQ</title>
+<style>
+:root{
+  --wall:#c9cfdc;
+  --bg:#f4f5f8; --panel:#ffffff; --ink:#1b1f2a; --muted:#667085; --line:#e3e6ee; --floor:#eceef4;
+  --accent:#008f78; --accent-fill:#00E5C0; --accent-soft:#d9faf4; --ok:#2f9e44; --warn:#e08a00; --bad:#d6336c;
+  --side:#0A0E1F; --side-ink:#c9cede; --radius:12px;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0A0E1F; --panel:#101830; --ink:#e9ebf2; --muted:#98a0b5; --line:#1E284A; --floor:#0d1428;
+         --accent:#00E5C0; --accent-soft:#0f3a3a; --side:#070a17; --wall:#2e3a62; }
+}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 "Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);display:flex;min-height:100vh}
+aside{width:226px;background:var(--side);color:var(--side-ink);padding:18px 12px;flex-shrink:0;display:flex;flex-direction:column;gap:2px;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{color:#fff;font-weight:700;font-size:17px}
+.brand-sub{font-size:12px;padding:0 10px 8px;opacity:.7}
+.nav-group{font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.5;padding:14px 10px 4px}
+nav button{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;background:none;border:0;color:inherit;font:inherit;padding:8px 10px;border-radius:8px;cursor:pointer}
+nav button:hover{background:#ffffff14}
+nav button.on{background:var(--accent-fill);color:#0A0E1F;font-weight:600}
+.logo{display:flex;align-items:center;gap:8px;padding:0 6px}
+.logo svg{width:44px;height:44px;flex-shrink:0}
+.badge{background:var(--bad);color:#fff;border-radius:10px;padding:0 7px;font-size:12px;font-weight:600}
+nav button.on .badge{background:#0A0E1F}
+.side-foot{margin-top:auto;font-size:12px;opacity:.7;padding:10px}
+main{flex:1;padding:24px 28px 60px;min-width:0;max-width:1480px}
+h1{font-size:23px;margin:0 0 4px} h2{font-size:17px;margin:0 0 10px} h3{font-size:15px;margin:0 0 6px}
+.sub{color:var(--muted);margin:0 0 18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:16px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+.muted{color:var(--muted)} .small{font-size:13px}
+.pill{display:inline-block;border-radius:20px;padding:2px 10px;font-size:12px;font-weight:600;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.pill.approved{background:#2f9e4422;color:var(--ok)} .pill.hold{background:#e08a0022;color:var(--warn)} .pill.rejected{background:#d6336c22;color:var(--bad)}
+.avatar{width:42px;height:42px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.avatar.sm{width:30px;height:30px;font-size:10px}
+.row{display:flex;gap:12px;align-items:center}
+.bar{height:7px;background:var(--line);border-radius:4px;overflow:hidden;flex:1}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:4px}
+.score-row{display:flex;align-items:center;gap:10px;font-size:13px;margin:5px 0}
+.score-row span:first-child{width:160px;color:var(--muted)} .score-row b{width:22px;text-align:right}
+.idea-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.rank{font-size:13px;font-weight:700;color:var(--accent)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:12px 0}
+.fact{background:var(--bg);border-radius:8px;padding:9px 11px;font-size:13px}
+.fact b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:2px}
+.view{border-left:3px solid var(--line);padding:2px 0 2px 12px;margin:10px 0}
+.view b{font-size:13px}
+details summary{cursor:pointer;font-weight:600;color:var(--accent);margin-top:8px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+button.btn{font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:7px 14px;border-radius:8px;cursor:pointer;white-space:nowrap}
+button.btn:hover{border-color:var(--accent)}
+button.btn.primary{background:var(--accent-fill);border-color:var(--accent-fill);color:#0A0E1F;font-weight:600}
+a{color:var(--accent)}
+button.btn.sel-approved{background:var(--ok);border-color:var(--ok);color:#fff}
+button.btn.sel-hold{background:var(--warn);border-color:var(--warn);color:#fff}
+button.btn.sel-rejected{background:var(--bad);border-color:var(--bad);color:#fff}
+.fld{display:flex;flex-direction:column;gap:3px;font-size:13px;margin-bottom:12px}
+.fld>span:first-child{font-weight:600}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0 12px}
+input[type=color]{width:100%;height:38px;padding:2px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+input[type=text],input[type=number],textarea,select{font:inherit;width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+textarea{min-height:70px;resize:vertical}
+table{width:100%;border-collapse:collapse;font-size:14px} th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top} th{font-size:12px;color:var(--muted);text-transform:uppercase}
+td.num{text-align:center;font-variant-numeric:tabular-nums}
+.log{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)} .log:last-child{border:0}
+.roadmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:8px}
+.roadmap ul{margin:4px 0 0;padding-left:18px;font-size:13px}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:50}
+.toast.show{opacity:1}
+.memo p{margin:0 0 10px}
+.live-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--bad);margin-right:6px;animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes blink{0%,45%{opacity:1}55%,100%{opacity:0}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 2px var(--c,var(--accent-fill))}50%{box-shadow:0 0 0 7px transparent}}
+.talk{stroke-dasharray:5 11;stroke-linecap:round;animation:dash 1.5s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-16}}
+.feed{max-height:430px;overflow-y:auto;display:flex;flex-direction:column;gap:10px}
+.msg{display:flex;gap:9px;align-items:flex-start}
+.msg .avatar{width:32px;height:32px;font-size:11px}
+.bubble{background:var(--bg);border-radius:10px;padding:7px 11px;font-size:14px;flex:1;min-width:0;overflow-wrap:anywhere}
+.bubble .who{font-size:12px;color:var(--muted);margin-bottom:2px}
+.msg.new .bubble{outline:2px solid var(--accent-fill)}
+.msg.me{flex-direction:row-reverse} .msg.me .bubble{background:var(--accent-soft)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:20px;padding:4px 12px;cursor:pointer}
+.chip.cur{background:var(--accent-fill);border-color:var(--accent-fill);color:#0A0E1F;font-weight:600}
+.chip.past{opacity:.6}
+
+/* Office */
+.mrooms{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:16px}
+.mroom{font:inherit;color:var(--ink);text-align:left;background:linear-gradient(135deg,color-mix(in srgb,#cfe6ff 25%,var(--panel)),var(--panel));border:2px solid #9fb7d6;border-radius:8px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:5px;min-height:92px;box-shadow:inset 0 0 0 3px color-mix(in srgb,#ffffff 40%,transparent)}
+.mini-room{position:relative;height:74px;margin:2px 0}
+.mini-table{position:absolute;left:22%;top:24%;width:56%;height:52%;border-radius:50%;background:linear-gradient(#c79a68,#a77847);border:3px solid #7a5530;display:flex;align-items:center;justify-content:center}
+.chair{position:absolute;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;border-radius:50%;background:var(--line);border:2px solid var(--panel)}
+.chair.taken{border-color:#fff;box-shadow:0 0 0 1px #0003}
+.mroom:hover{border-color:var(--accent)} .mroom.busy{border:2px solid var(--bad);box-shadow:0 0 0 3px #d6336c22}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-size:13px;color:var(--muted)}
+.stat b{font-size:17px;color:var(--ink);margin-right:6px}
+button.stat{font:inherit;font-size:13px;cursor:pointer} button.stat:hover{border-color:var(--accent)}
+.office{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:16px;align-items:start}
+.floor{position:relative;background:var(--floor);border:1px solid var(--line);border-radius:16px;padding:16px;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:32px 32px}
+#wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.exec{display:flex;justify-content:center;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.reception{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;background:linear-gradient(90deg,#0A0E1F,#1b2550);color:#e9ebf2;border-radius:10px;padding:8px 14px;margin-bottom:14px;font-weight:600;font-size:13px;box-shadow:0 2px 0 #00E5C055}
+.reception .small{opacity:.75;font-weight:400}
+.rooms{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.room{position:relative;background:color-mix(in srgb,var(--c) 6%,var(--panel));border:3px solid var(--wall);border-radius:6px;padding:10px 12px 18px;transition:box-shadow .3s;
+  background-image:radial-gradient(color-mix(in srgb,var(--c) 14%,transparent) 1px,transparent 1.4px);background-size:9px 9px}
+.room .door{position:absolute;bottom:-3px;left:50%;width:46px;height:3px;margin-left:-23px;background:var(--floor)}
+.room .door::after{content:"";position:absolute;left:0;bottom:3px;width:22px;height:22px;border:2px solid var(--wall);border-width:0 0 0 2px;border-radius:0 22px 0 0;opacity:.6}
+.room .plant{position:absolute;right:6px;bottom:2px;font-size:15px;opacity:.85}
+.zone-dot{display:inline-block;width:9px;height:9px;border-radius:2px;background:var(--c);margin-right:6px}
+.room.busy{box-shadow:0 0 0 2px var(--c)}
+.room-name{font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.room-tag{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:8px 0 4px}
+.desks{display:flex;flex-wrap:wrap;gap:8px}
+.desk{position:relative;font:inherit;color:var(--ink);background:none;border:0;border-radius:8px;padding:2px 4px 6px;width:104px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;text-align:center;opacity:.6;transition:opacity .3s,transform .2s}
+.ws-monitor{width:30px;height:19px;background:#2b3248;border:2px solid #1a1f30;border-radius:3px;position:relative;z-index:1;transition:background .4s,box-shadow .4s}
+.ws-monitor::after{content:"";position:absolute;left:50%;bottom:-6px;width:6px;height:4px;margin-left:-3px;background:#1a1f30}
+.ws-monitor.on{background:linear-gradient(135deg,#00E5C0,#1971c2);box-shadow:0 0 10px #00E5C088}
+.ws-top{width:78px;height:13px;margin-top:3px;border-radius:4px;background:linear-gradient(#c79a68,#a77847);box-shadow:0 2px 0 #7a5530}
+.seat-wrap{position:relative;padding-bottom:5px}
+.seat-wrap::after{content:"";position:absolute;left:50%;bottom:0;width:26px;height:6px;margin-left:-13px;border-radius:0 0 8px 8px;background:#4a5068}
+.desk.ws:hover .ws-top{box-shadow:0 2px 0 #7a5530,0 0 0 2px var(--accent-fill)}
+.plate{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:700}
+.mini-ws{display:flex;flex-direction:column;align-items:center;margin-left:auto}
+.mini-ws .ws-top{width:44px}
+.desk:hover{border-color:var(--accent);opacity:1;transform:translateY(-2px)}
+.desk.cabin{width:100%;flex-direction:column;align-items:stretch;text-align:left;gap:0;padding:8px 10px;border:2px solid color-mix(in srgb,var(--c) 55%,#9fb7d6);border-radius:6px;
+  background:linear-gradient(135deg,color-mix(in srgb,#cfe6ff 22%,var(--panel)),var(--panel));box-shadow:inset 0 0 0 3px color-mix(in srgb,#ffffff 35%,transparent)}
+.desk.exec-cabin{width:230px}
+.desk.idle,.desk.in,.desk.speak{opacity:1}
+.desk.ws.in .seat-wrap .avatar{box-shadow:0 0 0 3px var(--c)}
+.desk.ws.speak .seat-wrap .avatar{box-shadow:0 0 0 4px var(--c)}
+.desk.cabin.in{border-color:var(--c)}
+.desk.cabin.speak{box-shadow:0 0 0 3px var(--c)}
+.desk.speak .avatar{animation:glow 1.8s ease-in-out infinite}
+.desk-name{font-size:11.5px;line-height:1.25;font-weight:600}
+.desk.cabin .desk-name{font-size:13px}
+.desk-state{font-size:10.5px;color:var(--muted);font-weight:400;margin-top:2px}
+.chip .live-dot{margin-right:5px}
+.say{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);width:230px;background:var(--ink);color:var(--bg);font-size:12px;line-height:1.35;font-weight:400;text-align:left;padding:7px 10px;border-radius:10px;z-index:5;pointer-events:none}
+.say::after{content:"";position:absolute;top:100%;left:50%;margin-left:-6px;border:6px solid transparent;border-top-color:var(--ink)}
+.now{position:sticky;top:16px}
+.cams{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;align-content:start}
+.cam{font:inherit;color:var(--ink);text-align:left;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--c);border-radius:10px;padding:10px;cursor:pointer;display:flex;flex-direction:column;gap:5px}
+.cam:hover,.cam.on{border-color:var(--c);box-shadow:0 0 0 2px var(--c)}
+.cam-now{font-size:13px;min-height:36px}
+.cam-nums{display:flex;gap:10px;font-size:12px;color:var(--muted)} .cam-nums b{color:var(--ink)}
+.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.roomwin{position:fixed;inset:3vh 3vw;background:var(--bg);border:1px solid var(--line);border-radius:16px;z-index:21;padding:20px 22px;overflow-y:auto}
+.roomgrid{display:grid;grid-template-columns:minmax(0,3fr) minmax(300px,2fr);gap:16px;align-items:start}
+.tv{background:#0b1020;color:#d7dcf0;border:8px solid #1a2140;border-radius:14px;padding:14px 18px;min-height:210px;box-shadow:0 6px 0 #05070f}
+.tv-top{display:flex;justify-content:space-between;align-items:center;font-size:11px;letter-spacing:.08em;color:#8892b8}
+.tv-body{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start} .tv-body ul{margin:0;padding-left:20px;flex:1;min-width:200px;font-size:15px;line-height:1.7}
+.tv-note{font-size:12px;color:#8892b8;margin-top:4px}
+.tvbtn{font:inherit;width:26px;height:24px;margin-left:4px;border:1px solid #3b4770;border-radius:6px;background:none;color:#d7dcf0;cursor:pointer}
+.hall{position:relative;height:330px;margin-top:16px;background:var(--floor);border:1px solid var(--line);border-radius:16px}
+.table{position:absolute;left:24%;top:27%;width:52%;height:46%;border-radius:50%/50%;background:linear-gradient(#b98a5a,#8d6238);border:5px solid #6f4b29;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-size:14px;box-shadow:0 8px 14px #0003}
+.seat{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;width:110px;text-align:center}
+.seat .avatar{border:3px solid var(--panel)} .seat.talking .avatar{animation:glow 1.8s ease-in-out infinite}
+.seat-name{font-size:12.5px;font-weight:700;line-height:1.2;margin-top:2px} .seat-role{font-size:10px;color:var(--muted);line-height:1.15}
+.seat.empty{opacity:.5}
+.seat:hover .avatar{transform:scale(1.08)} .seat.pinned .avatar{box-shadow:0 0 0 4px #FFB020}
+.seat .pin{position:absolute;top:-14px;right:22px;font-size:16px}
+.caret{display:inline-block;margin-left:2px;color:var(--accent);animation:blink 1.1s step-end infinite}
+.whiteboard{background:repeating-linear-gradient(var(--panel),var(--panel) 27px,var(--line) 28px)}
+.celebrate{position:fixed;inset:0;z-index:40;pointer-events:none;display:flex;align-items:flex-start;justify-content:center}
+.celebrate span{position:absolute;top:-40px;font-size:30px;animation:fall 3.2s linear infinite}
+@keyframes fall{to{transform:translateY(105vh) rotate(360deg)}}
+.celebrate-card{margin-top:12vh;background:var(--panel);border:2px solid var(--accent-fill);border-radius:16px;padding:18px 28px;text-align:center;max-width:520px;box-shadow:0 10px 40px #0005}
+@media (max-width:900px){.roomgrid{grid-template-columns:1fr}.roomwin{inset:0;border-radius:0}}
+.monitors{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.monitor{cursor:pointer;display:flex;flex-direction:column}
+.monitor .screen{background:#151b30;border:7px solid #23293d;border-bottom-width:12px;border-radius:10px;height:150px;overflow:hidden;color:#d7dcf0;font-size:12.5px;box-shadow:0 0 0 1px var(--line)}
+.monitor.big{cursor:default} .monitor.big .screen{height:auto;min-height:340px;max-height:66vh;overflow:auto}
+.monitor:hover .screen{box-shadow:0 0 0 2px var(--c)}
+.monitor .stand{width:34%;height:9px;margin:0 auto;background:#2b3248;border-radius:0 0 8px 8px}
+.app-bar{display:flex;gap:6px;align-items:center;background:#23293d;padding:4px 8px;font-size:11px}
+.app-bar .url{background:#151b30;border-radius:6px;padding:1px 8px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#aeb6d0}
+.app-body{padding:8px 10px;line-height:1.4} .app-body.doc{margin:0;white-space:pre-wrap;font:11.5px/1.45 Consolas,monospace;color:#cfd6ee}
+.monitor.big .app-body.doc{font-size:13px}
+.wallpaper{height:100%;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:10px;background:radial-gradient(circle at 30% 20%,#25305a,#10152a)}
+/* motion */
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{opacity:0;transform:translate(-50%,6px) scale(.9)}100%{opacity:1;transform:translate(-50%,0) scale(1)}}
+@keyframes bubble{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes screen{to{background-position:0 -40px}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+#main.enter > *{animation:rise .45s cubic-bezier(.2,.7,.2,1) both}
+#main.enter > *:nth-child(2){animation-delay:.04s} #main.enter > *:nth-child(3){animation-delay:.08s}
+#main.enter > *:nth-child(4){animation-delay:.12s} #main.enter > *:nth-child(5){animation-delay:.16s} #main.enter > *:nth-child(n+6){animation-delay:.2s}
+.say{animation:pop .28s ease-out both}
+.msg.new{animation:bubble .35s ease-out both}
+.ws-monitor.on{overflow:hidden}
+.ws-monitor.on::before{content:"";position:absolute;inset:2px;background:repeating-linear-gradient(#ffffffaa 0 1px,transparent 1px 4px);opacity:.55;animation:screen 1.6s linear infinite}
+.desk.speak .seat-wrap .avatar,.desk.cabin.speak .seat-wrap .avatar{animation:bob 2.2s ease-in-out infinite,glow 1.8s ease-in-out infinite}
+.mroom.busy .mini-table{box-shadow:0 0 0 4px #d6336c33;animation:pulse 2.4s ease-in-out infinite}
+.desk,.mroom,.monitor,.cam,.card{transition:transform .2s ease,box-shadow .25s ease,opacity .3s}
+.mroom:hover,.monitor:hover,.cam:hover{transform:translateY(-2px)}
+#walkers{position:fixed;inset:0;pointer-events:none;z-index:30}
+.walker{position:fixed;width:30px;height:30px;font-size:10px;box-shadow:0 6px 14px #0005;border:2px solid #fff}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+/* Mail */
+.mail{display:grid;grid-template-columns:290px minmax(0,1fr);gap:0;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;min-height:70vh}
+.folders{border-right:1px solid var(--line);padding:10px;overflow-y:auto;max-height:82vh}
+.folder{display:flex;gap:9px;align-items:center;width:100%;text-align:left;font:inherit;color:var(--ink);background:none;border:0;border-radius:8px;padding:7px 8px;cursor:pointer}
+.folder:hover{background:var(--bg)} .folder.on{background:var(--accent-soft)}
+.folder .t{flex:1;min-width:0} .folder .t div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pane{padding:16px 18px;display:flex;flex-direction:column;min-width:0}
+/* Profile drawer */
+.shade{position:fixed;inset:0;background:#0008;z-index:20}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100vw);background:var(--panel);border-left:1px solid var(--line);z-index:21;padding:20px;overflow-y:auto}
+svg text{font-family:inherit}
+@media (max-width:1100px){.office{grid-template-columns:1fr}.now{position:static}}
+@media (max-width:760px){body{flex-direction:column}aside{width:auto;height:auto;position:static}nav{display:flex;flex-wrap:wrap}nav button{width:auto;gap:6px}.nav-group{display:none}main{padding:18px 14px 50px}.side-foot{display:none}.mail{grid-template-columns:1fr}.folders{border-right:0;border-bottom:1px solid var(--line);max-height:240px}}
+
+/* ================= Theme: liquid glass ================= */
+:root{
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Inter","Segoe UI Variable Text","Segoe UI",system-ui,sans-serif;
+  --bg:#eceef4; --panel:rgba(255,255,255,.62); --ink:#1d1d1f; --muted:#6e6e73; --line:rgba(60,60,67,.14);
+  --floor:rgba(255,255,255,.34); --wall:rgba(60,60,67,.22);
+  --accent:#0071e3; --accent-fill:#0a84ff; --accent-soft:rgba(10,132,255,.13);
+  --ok:#248a3d; --warn:#c27400; --bad:#e0245e;
+  --side-ink:var(--ink); --radius:22px;
+  --glass:rgba(255,255,255,.56); --glass-strong:rgba(250,250,253,.86); --glass-edge:rgba(255,255,255,.75);
+  --glass-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 1px 2px rgba(20,24,60,.05),0 14px 40px rgba(31,38,80,.10);
+  --fill:rgba(118,118,128,.11); --fill-2:rgba(118,118,128,.18);
+  --wall-a:#d7e6ff; --wall-b:#ffdcec; --wall-c:#d6f5ea; --wall-base:#f4f5fa;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0c0d13; --panel:rgba(34,36,48,.55); --ink:#f5f5f7; --muted:#a1a1aa; --line:rgba(255,255,255,.12);
+  --floor:rgba(255,255,255,.04); --wall:rgba(255,255,255,.16);
+  --accent:#4da3ff; --accent-fill:#0a84ff; --accent-soft:rgba(10,132,255,.22);
+  --ok:#30d158; --warn:#ffb340; --bad:#ff5c7a;
+  --glass:rgba(30,32,44,.55); --glass-strong:rgba(22,23,32,.9); --glass-edge:rgba(255,255,255,.13);
+  --glass-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 18px 50px rgba(0,0,0,.45);
+  --fill:rgba(118,118,128,.2); --fill-2:rgba(118,118,128,.32);
+  --wall-a:#12306e; --wall-b:#4a1d6e; --wall-c:#0a4a4a; --wall-base:#07080d;
+  color-scheme:dark;
+} }
+:root[data-theme="dark"]{
+  --bg:#0c0d13; --panel:rgba(34,36,48,.55); --ink:#f5f5f7; --muted:#a1a1aa; --line:rgba(255,255,255,.12);
+  --floor:rgba(255,255,255,.04); --wall:rgba(255,255,255,.16);
+  --accent:#4da3ff; --accent-fill:#0a84ff; --accent-soft:rgba(10,132,255,.22);
+  --ok:#30d158; --warn:#ffb340; --bad:#ff5c7a;
+  --glass:rgba(30,32,44,.55); --glass-strong:rgba(22,23,32,.9); --glass-edge:rgba(255,255,255,.13);
+  --glass-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 18px 50px rgba(0,0,0,.45);
+  --fill:rgba(118,118,128,.2); --fill-2:rgba(118,118,128,.32);
+  --wall-a:#12306e; --wall-b:#4a1d6e; --wall-c:#0a4a4a; --wall-base:#07080d;
+  color-scheme:dark;
+}
+body{font:15px/1.5 var(--font);background:var(--wall-base);-webkit-font-smoothing:antialiased;letter-spacing:-.006em}
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+  radial-gradient(55% 50% at 12% 8%,var(--wall-a) 0,transparent 62%),
+  radial-gradient(48% 44% at 92% 12%,var(--wall-b) 0,transparent 60%),
+  radial-gradient(60% 55% at 68% 100%,var(--wall-c) 0,transparent 62%)}
+::selection{background:var(--accent-soft)}
+*{scrollbar-width:thin;scrollbar-color:var(--fill-2) transparent}
+h1{font-size:30px;font-weight:700;letter-spacing:-.025em;margin:0 0 4px} h2{font-size:18px;font-weight:650;letter-spacing:-.015em} h3{font-size:15px;font-weight:650;letter-spacing:-.01em}
+.sub{font-size:15px;max-width:900px}
+/* glass surfaces */
+aside,.card,.stat,.mail,.drawer,.roomwin,.celebrate-card,.cam,.hud{background:var(--glass);-webkit-backdrop-filter:blur(28px) saturate(180%);backdrop-filter:blur(28px) saturate(180%);border:1px solid var(--glass-edge);box-shadow:var(--glass-shadow)}
+.card{border-radius:var(--radius);padding:20px}
+.stat{border-radius:16px}
+.roomwin,.drawer{background:var(--glass-strong)}
+.roomwin{border-radius:28px}
+.drawer{top:12px;right:12px;bottom:12px;border-radius:26px}
+.shade{background:rgba(0,0,0,.28);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+/* sidebar */
+aside{margin:12px 0 12px 12px;height:calc(100vh - 24px);top:12px;border-radius:26px;color:var(--ink);width:232px;padding:18px 12px}
+.brand{color:var(--ink);font-weight:700;letter-spacing:-.02em}
+.nav-group{opacity:.55;font-weight:600;letter-spacing:.06em;font-size:10.5px}
+nav button{border-radius:12px;padding:7px 11px;font-weight:500;transition:background .18s}
+nav button:hover{background:var(--fill)}
+nav button.on{background:var(--accent-fill);color:#fff;font-weight:600;box-shadow:0 4px 14px rgba(10,132,255,.35)}
+nav button.on .badge{background:rgba(255,255,255,.28)}
+.badge{border-radius:999px}
+.seg{display:flex;gap:2px;background:var(--fill);border-radius:10px;padding:2px;margin:10px 4px 0}
+.seg button{flex:1;font:inherit;font-size:12px;border:0;background:none;color:var(--muted);padding:4px 0;border-radius:8px;cursor:pointer}
+.seg button.on{background:var(--glass-strong);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.14)}
+main{padding:26px 30px 60px}
+/* controls */
+button.btn{border-radius:999px;padding:7px 16px;border:1px solid var(--line);background:var(--fill);font-weight:500;transition:transform .12s,background .18s,box-shadow .18s}
+button.btn:hover{background:var(--fill-2);border-color:var(--line)}
+button.btn:active{transform:scale(.97)}
+button.btn.primary{background:var(--accent-fill);border-color:transparent;color:#fff;font-weight:600;box-shadow:0 4px 14px rgba(10,132,255,.32)}
+button.btn.primary:hover{background:#2893ff}
+button.btn.sel-approved,button.btn.sel-hold,button.btn.sel-rejected{border-color:transparent}
+.chip{border-radius:999px;background:var(--fill);border-color:transparent;padding:5px 13px}
+.chip.cur{background:var(--accent-fill);border-color:transparent;color:#fff}
+.pill{border-radius:999px;padding:2px 10px}
+input[type=text],input[type=number],textarea,select{border-radius:12px;background:var(--fill);border:1px solid transparent;padding:9px 12px;transition:box-shadow .15s,border-color .15s}
+input[type=text]:focus,input[type=number]:focus,textarea:focus,select:focus{outline:0;border-color:var(--accent-fill);box-shadow:0 0 0 4px var(--accent-soft)}
+:focus-visible{outline:2px solid var(--accent-fill);outline-offset:2px}
+.fact{background:var(--fill);border-radius:14px}
+.bubble{background:var(--fill);border-radius:18px;padding:8px 13px}
+.msg.me .bubble{background:var(--accent-fill);color:#fff} .msg.me .bubble .who{color:rgba(255,255,255,.8)}
+.msg.new .bubble{outline:2px solid var(--accent-fill)}
+.view{border-left-width:3px;border-radius:2px}
+.toast{background:var(--glass-strong);color:var(--ink);border:1px solid var(--glass-edge);border-radius:999px;padding:10px 20px;box-shadow:0 12px 40px rgba(0,0,0,.25);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);left:50%;right:auto;transform:translateX(-50%)}
+.say{background:var(--glass-strong);color:var(--ink);border:1px solid var(--glass-edge);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.say::after{border-top-color:var(--glass-strong)}
+.live-dot{background:#ff375f;box-shadow:0 0 8px #ff375f}
+th{font-weight:600;letter-spacing:.04em}
+.mail{border-radius:var(--radius)} .folder{border-radius:12px} .folder:hover{background:var(--fill)}
+.floor{border-radius:26px;background-color:var(--floor)}
+.room{border-radius:18px;border-width:1.5px} .desk.cabin{border-radius:16px;border-width:1.5px} .mroom{border-radius:18px;border-width:1.5px;background:var(--panel)}
+.reception{border-radius:16px}
+.tv{border-radius:22px} .hall{border-radius:24px}
+.monitor .screen{border-radius:16px}
+@media (max-width:760px){aside{margin:8px;height:auto;width:auto;border-radius:20px}}
+
+/* ================= Campus: the company in 3D ================= */
+.campus{position:relative;height:calc(100vh - 150px);min-height:540px;border-radius:30px;overflow:hidden;cursor:grab;user-select:none;touch-action:none;
+  background:radial-gradient(90% 70% at 50% 108%,#123a8a 0,transparent 60%),radial-gradient(60% 40% at 15% 0,#3b1a66 0,transparent 70%),radial-gradient(50% 40% at 90% 5%,#0b4d57 0,transparent 70%),#05060c;
+  box-shadow:0 30px 80px rgba(8,12,40,.35),inset 0 0 0 1px rgba(255,255,255,.1);color:#f5f5f7;
+  --ink:#f5f5f7;--muted:#aab0c8;--line:rgba(255,255,255,.16);--accent:#6ab4ff;--accent-soft:rgba(10,132,255,.28);--bad:#ff6b8a;--ok:#30d158;--warn:#ffb340;
+  --glass:rgba(16,20,42,.58);--glass-strong:rgba(16,20,42,.9);--glass-edge:rgba(255,255,255,.16);--glass-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 18px 50px rgba(0,0,0,.45);--fill:rgba(255,255,255,.10);--fill-2:rgba(255,255,255,.2)}
+.campus.grabbing{cursor:grabbing}
+.campus::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.7;background-image:radial-gradient(1.2px 1.2px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 28% 9%,#cfe1ff,transparent),radial-gradient(1.4px 1.4px at 47% 14%,#fff,transparent),radial-gradient(1px 1px at 63% 6%,#fff,transparent),radial-gradient(1.2px 1.2px at 78% 20%,#d9d0ff,transparent),radial-gradient(1px 1px at 91% 11%,#fff,transparent),radial-gradient(1px 1px at 36% 26%,#fff,transparent),radial-gradient(1px 1px at 70% 30%,#bfe9ff,transparent)}
+.stage{position:absolute;inset:0;perspective:1900px;perspective-origin:50% 38%}
+.world{position:absolute;left:50%;top:54%;width:1500px;height:1100px;margin:-550px 0 0 -750px;transform-style:preserve-3d;
+  transform:scale(var(--zm,.6)) rotateX(var(--rx,58deg)) rotateZ(var(--rz,-32deg))}
+.world *{transform-style:preserve-3d}
+.ground{position:absolute;inset:-160px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(40,90,220,.30),rgba(20,40,120,.16) 55%,transparent 72%)}
+.ground::before{content:"";position:absolute;inset:0;border-radius:50%;opacity:.55;
+  background-image:linear-gradient(rgba(120,180,255,.35) 1px,transparent 1px),linear-gradient(90deg,rgba(120,180,255,.35) 1px,transparent 1px);background-size:50px 50px;
+  -webkit-mask-image:radial-gradient(closest-side,#000 45%,transparent 72%);mask-image:radial-gradient(closest-side,#000 45%,transparent 72%)}
+#beams{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.road{fill:none;stroke:rgba(140,190,255,.28);stroke-width:5;stroke-linecap:round}
+.ring{fill:none;stroke:rgba(140,190,255,.22);stroke-width:8}
+.beam{fill:none;stroke-width:6;stroke-linecap:round;stroke-dasharray:4 16;animation:dash 1.2s linear infinite;filter:drop-shadow(0 0 8px currentColor)}
+.beam-glow{fill:none;stroke-width:14;stroke-linecap:round;opacity:.22}
+.bld{position:absolute;cursor:pointer}
+.bld .f{position:absolute;pointer-events:auto;transition:filter .5s,box-shadow .5s}
+.bld .base{inset:-16px;border-radius:22px;background:radial-gradient(closest-side,color-mix(in srgb,var(--c) 55%,transparent),transparent);opacity:.55}
+.bld .side{background:
+  repeating-linear-gradient(90deg,transparent 0 13px,rgba(4,8,24,.55) 13px 17px),
+  repeating-linear-gradient(0deg,transparent 0 15px,rgba(4,8,24,.55) 15px 20px),
+  linear-gradient(to top,color-mix(in srgb,var(--c) 34%,#0a1030),color-mix(in srgb,var(--c) 62%,#1b2a66));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+.bld.lit .side,.bld.active .side{background:
+  repeating-linear-gradient(90deg,transparent 0 13px,rgba(4,8,24,.6) 13px 17px),
+  repeating-linear-gradient(0deg,transparent 0 15px,rgba(4,8,24,.6) 15px 20px),
+  linear-gradient(to top,color-mix(in srgb,var(--c) 70%,#fff 6%),color-mix(in srgb,var(--c) 55%,#fff 45%))}
+.bld .front{left:0;bottom:0;width:100%;height:var(--h);transform-origin:50% 100%;transform:rotateX(-90deg)}
+.bld .back{left:0;top:0;width:100%;height:var(--h);transform-origin:50% 0;transform:rotateX(90deg);filter:brightness(.7)}
+.bld .left{left:0;top:0;width:var(--h);height:100%;transform-origin:0 50%;transform:rotateY(-90deg);filter:brightness(.8)}
+.bld .right{right:0;top:0;width:var(--h);height:100%;transform-origin:100% 50%;transform:rotateY(90deg);filter:brightness(.92)}
+.bld .top{inset:0;transform:translateZ(var(--h));border-radius:3px;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--c) 45%,#eaf2ff),color-mix(in srgb,var(--c) 70%,#1a2460));box-shadow:inset 0 0 0 2px rgba(255,255,255,.5),inset 0 0 26px rgba(255,255,255,.25)}
+.bld.active .base{opacity:1;animation:pulse 1.8s ease-in-out infinite}
+.bld.sel .top{box-shadow:inset 0 0 0 3px #fff,0 0 30px 6px var(--c)}
+.bld.sel .base{opacity:1;background:radial-gradient(closest-side,#fff8,color-mix(in srgb,var(--c) 70%,transparent),transparent)}
+.bld:hover .top{box-shadow:inset 0 0 0 3px #fff,inset 0 0 26px rgba(255,255,255,.4)}
+.bld.pod .side{background:linear-gradient(to top,rgba(140,220,255,.5),rgba(220,245,255,.75));box-shadow:inset 0 0 0 1px rgba(255,255,255,.7)}
+.bld.pod .top{background:linear-gradient(135deg,rgba(235,250,255,.85),rgba(120,200,255,.55));border-radius:10px}
+.bld.pod.active .side{background:linear-gradient(to top,rgba(255,80,130,.65),rgba(255,190,210,.8))}
+.bld.hq .top{background:linear-gradient(135deg,#fff,#9cc8ff 60%,#0a84ff)}
+.bill{position:absolute;width:0;height:0;transform:translateZ(var(--z,0px)) rotateZ(calc(var(--rz,-32deg) * -1)) rotateX(calc(var(--rx,58deg) * -1))}
+.bill>div{position:absolute;left:0;bottom:0;transform:translateX(-50%)}
+.tag-body{white-space:nowrap;font:600 12px/1 var(--font);color:#fff;background:rgba(14,18,40,.72);border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:6px 11px;display:flex;align-items:center;gap:6px;box-shadow:0 6px 18px rgba(0,0,0,.4);cursor:pointer}
+.tag-body i{width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c);flex-shrink:0}
+.tag-n{font-weight:500;opacity:.7}
+.bld.active .tag-body{background:#fff;color:#0b1026}
+.peep-body{display:flex;flex-direction:column;align-items:center;cursor:pointer}
+.peep-head{width:30px;height:30px;border-radius:50%;border:2px solid #fff;color:#fff;font:700 9px/26px var(--font);text-align:center;box-shadow:0 4px 10px rgba(0,0,0,.45);background:var(--c);transition:transform .2s}
+.peep-stem{width:3px;height:13px;background:linear-gradient(#fff,rgba(255,255,255,.2));border-radius:2px}
+.peep:hover .peep-head{transform:scale(1.25)}
+.peep.idle .peep-head{filter:saturate(.55) brightness(.8)}
+.peep.hear .peep-head{box-shadow:0 0 0 3px rgba(255,255,255,.55),0 4px 10px rgba(0,0,0,.45)}
+.peep.speak .peep-head{animation:bob 2.2s ease-in-out infinite,glow 1.8s ease-in-out infinite}
+.peep-say{width:230px;margin-bottom:8px;font:400 12px/1.35 var(--font);text-align:left;color:#0b1026;background:rgba(255,255,255,.95);border-radius:14px;padding:8px 11px;box-shadow:0 10px 30px rgba(0,0,0,.45);animation:bubble .35s ease-out both}
+.tree{font-size:26px;filter:drop-shadow(0 4px 4px rgba(0,0,0,.4))}
+.hud{position:absolute;z-index:5;border-radius:20px;padding:10px 14px;color:var(--ink);cursor:default;background:var(--glass);user-select:text;touch-action:auto}
+.hud-top{left:16px;top:16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:13px;font-weight:500;border-radius:999px;padding:8px 16px}
+.hud-top b{font-size:15px;margin-right:4px}
+.hud-top button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+.hud-ctl{right:16px;top:16px;display:flex;gap:4px;padding:5px;border-radius:999px}
+.hud-ctl button{font:600 13px var(--font);min-width:32px;height:32px;padding:0 10px;border:0;border-radius:999px;background:none;color:var(--ink);cursor:pointer}
+.hud-ctl button:hover{background:var(--fill-2)} .hud-ctl button.on{background:var(--accent-fill);color:#fff}
+.hud-side{right:16px;top:70px;bottom:84px;width:330px;overflow-y:auto;padding:16px;border-radius:24px}
+.hud-side h3{margin:0 0 2px}
+.hud-bar{left:16px;right:16px;bottom:16px;display:flex;gap:10px;align-items:center;border-radius:999px;padding:8px 8px 8px 16px}
+.hud-bar textarea{flex:1;min-height:0;height:38px;resize:none;border-radius:999px;padding:8px 16px}
+.hud-hint{left:16px;bottom:84px;font-size:12px;color:var(--muted);padding:6px 12px;border-radius:999px}
+.who-row{display:flex;gap:10px;align-items:center;width:100%;text-align:left;font:inherit;color:var(--ink);background:none;border:0;border-radius:14px;padding:7px 8px;cursor:pointer}
+.who-row:hover{background:var(--fill)}
+.who-row .t{flex:1;min-width:0;line-height:1.25} .who-row .t small{display:block;color:var(--muted);font-size:12px}
+.who-row .t em{display:block;font-style:normal;color:var(--accent);font-size:12px}
+@media (max-width:1000px){.hud-side{position:static;width:auto;margin:60px 12px 150px;max-height:none}.hud-hint{display:none}}
+.plaza{position:absolute;width:180px;height:180px;border-radius:50%;border:2px solid rgba(140,190,255,.45);box-shadow:0 0 40px rgba(60,130,255,.35),inset 0 0 40px rgba(60,130,255,.25);display:flex;align-items:center;justify-content:center;text-align:center;font:700 15px/1.3 var(--font);letter-spacing:.28em;color:rgba(210,230,255,.75);pointer-events:none}
+@media (min-width:1001px){.stage{right:346px}}
+</style>
+</head>
+<body>
+<aside>
+  <div class="logo">
+    <img id="ownLogo" src="/logo" alt="" style="width:44px;height:44px;flex-shrink:0" onerror="this.remove();document.getElementById('stdLogo').style.display=''">
+    <svg id="stdLogo" style="display:none" viewBox="0 0 48 48" role="img" aria-label="Company logo">
+      <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ac8fa"/><stop offset="1" stop-color="#0a84ff"/></linearGradient></defs>
+      <rect x="4" y="4" width="40" height="40" rx="11" fill="url(#lg)"/>
+      <path d="M14 34V20l10-6 10 6v14h-7v-8h-6v8z" fill="#fff"/>
+    </svg>
+    <div class="brand" id="brand">Company HQ</div>
+  </div>
+  <div class="brand-sub" id="tagline" style="padding:6px 10px 0;color:var(--accent);opacity:1"></div>
+  <div class="brand-sub" id="brandSub"></div>
+  <div id="liveBox" style="padding:4px 6px 0"></div>
+  <nav id="nav"></nav>
+  <div class="side-foot" id="sideFoot"></div>
+  <div class="seg" id="themeBox"><button data-t="light" onclick="setTheme('light')">Light</button><button data-t="auto" onclick="setTheme('auto')">Auto</button><button data-t="dark" onclick="setTheme('dark')">Dark</button></div>
+</aside>
+<main id="main"><p class="muted">Loading…</p></main>
+<div id="drawer"></div>
+<div id="walkers"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+function applyTheme(){
+  let t = "auto"; try{ t = localStorage.getItem("na-theme") || "auto"; }catch(e){}
+  if (t === "auto") document.documentElement.removeAttribute("data-theme"); else document.documentElement.setAttribute("data-theme", t);
+  document.querySelectorAll("#themeBox button").forEach(b => b.classList.toggle("on", b.dataset.t === t));
+}
+function setTheme(t){ try{ localStorage.setItem("na-theme", t); }catch(e){} applyTheme(); }
+applyTheme();
+const NAV = [
+  ["Company", [["campus","Campus"],["office","Office floor"],["control","Control Room"],["screens","Screens"],["mail","Mail"],["meetings","Meetings"],["documents","Documents"]]],
+  ["Founder", [["founder","Founder Desk"],["deliverables","Deliverables"],["ideas","Business Cases"],["social","Social Media"]]],
+  ["Organisation", [["departments","Departments"],["projects","Projects"],["agents","Agent Management"],["legal","Legal & Conduct"],["channels","Channels"]]],
+  ["System", [["it","IT & Platform"],["activity","Activity Log"]]]
+];
+let S = null, F = null, C = {threads:[]}, M = {messages:[],decisions:[]}, SO = {policy:"",items:[]};
+let tab = "campus", deptSel = "ceo", profileId = null, mailSel = "approvals";
+let LIVE = {on:true, pace:120, statuses:{}, count:0, limit:100, error:""};   // the company's live work
+const OFFICE = {mode:"live", date:"", say:"", busy:false};
+const ROOMV = {open:"", slide:-1, pin:"", call:null};   // pin: the person the founder talks to; call: people for a meeting he calls                          // the meeting room window: which room, which TV slide (-1 = follow the talk)
+const CELEB = {text:"", last:""};                           // milestone celebration   // say: what the founder is typing into a meeting                      // Office page: live work, or the history of one date
+let ROOMS = {rooms:[], bookings:[]};                        // meeting rooms and their bookings
+let EVENTS = [], MEM = {}, DELIV = [], camSel = "";          // control room log, employee memory, deliverables
+let FILES = [], openFile = null;                            // company documents; the one being viewed
+let ENGINE = "claude", ENGINE_WHY = "", ENGINE_AT = "";     // "claude" or "backup": who answers in the chats
+let TYPING = {};                                            // words an employee has written so far, by id
+let MODELS = [], APIK = {set:false, masked:"", models:0, error:""}, READY = false;   // Claude API key status; whether live work can run                                            // AI models an employee can work with
+let PROMPTS = {}, RULES = "";                               // default system prompts and the fixed company rules
+const AG = {sel:"ceo", draft:null, confirm:false};          // Agent Management form
+const CHAT = {busy:false, draft:"", to:"ceo", error:""};   // live chat with one employee
+const P = {tid:null, idx:0, done:false, paused:false};     // replay of the day's meetings
+const TYPES = {invite:"Meeting invite", meeting:"Booked meeting", address:"Your address", research:"Web research", reaction:"After you spoke", board:"Board meeting", team:"Department meeting", mail:"Mail", emergency:"Emergency meeting", conduct:"Conduct review", standup:"Daily stand-up", one_on_one:"CEO 1:1 review", discussion:"Team discussion", presentation:"Presentation", review:"Daily review", feedback:"Feedback"};
+const FOUNDER = {id:"founder", short:"YOU", color:"#64748b", title:"Founder", dept:"Founder (you)"};
+const SVGNS = "http://www.w3.org/2000/svg";
+
+function s(tag, attrs, ...kids){
+  const e = document.createElementNS(SVGNS, tag);
+  for (const [k,v] of Object.entries(attrs||{})) e.setAttribute(k, v);
+  for (const kid of kids.flat()){ if (kid != null) e.append(kid.nodeType ? kid : document.createTextNode(String(kid))); }
+  return e;
+}
+function h(tag, attrs, ...kids){
+  const e = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs||{})){
+    if (k === "class") e.className = v;
+    else if (k === "style") e.style.cssText = v;
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v);
+  }
+  for (const kid of kids.flat(3)){
+    if (kid == null || kid === false) continue;
+    e.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+  }
+  return e;
+}
+const staff = () => S.staff || [];
+const everyone = () => [...S.agents, ...staff()];
+const team = id => staff().filter(x => x.reportsTo === id);
+const nm = a => a.name || a.title;                      // "Rohan Kapoor"
+const named = a => !!a.name && a.name !== a.title;      // a person may have only a job title
+const first = a => a.id === "founder" ? "You" : named(a) ? a.name.split(" ")[0] : a.title;
+const label = a => a.id === "founder" ? "Founder" : named(a) ? first(a)+" ("+a.title+")" : a.title;
+const agent = id => id === "founder" ? FOUNDER : (everyone().find(a => a.id === id) || {id, short:"?", color:"#888", title:id, dept:id});
+const avatar = (a, small) => h("div",{class:"avatar"+(small?" sm":""),style:"background:"+a.color},a.short);
+const decision = id => (F.decisions[id] || {});
+const companyName = () => F.companyName || S.company.name;
+const pendingList = () => M.decisions.filter(d => d.status === "pending");
+const go = t => { tab = t; render(); };
+const short = (text, n) => text.length > n ? text.slice(0, n-1).trimEnd()+"…" : text;
+
+function toast(msg){
+  const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast.t); toast.t = setTimeout(()=>t.classList.remove("show"),2200);
+}
+async function save(msg){
+  try{
+    const r = await fetch("/api/founder",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(F)});
+    if(!r.ok) throw new Error(r.status);
+    toast(msg || "Saved");
+  }catch(e){ toast("Could not save: "+e.message); }
+  render();
+}
+async function post(path, body){
+  const r = await fetch(path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const d = await r.json(); if (!r.ok) throw new Error(d.error || r.status);
+  if (d.meeting) M = d.meeting; if (d.social) SO = d.social;
+  if (d.state){ S = d.state; PROMPTS = d.prompts || {}; MODELS = d.models || MODELS; }
+  if (d.api) APIK = d.api;
+  if (d.live) LIVE = Object.assign({}, LIVE, d.live);
+  if (d.deliverables) DELIV = d.deliverables;
+  return d;
+}
+async function load(){
+  const d = await (await fetch("/api/state")).json();
+  S = d.state; C = d.comms || {threads:[]}; F = Object.assign({companyName:"",founderName:"",decisions:{},messages:[]}, d.founder);
+  M = d.meeting || M; SO = d.social || SO; PROMPTS = d.prompts || {}; RULES = d.rules || ""; MODELS = d.models || MODELS; APIK = d.api || APIK; READY = !!d.ready; ENGINE = d.engine || ENGINE; LIVE = d.live || LIVE; FILES = d.files || [];
+  ENGINE_WHY = d.engineWhy || ""; ENGINE_AT = d.engineChecked || "";
+  EVENTS = d.events || []; MEM = d.memory || {}; DELIV = d.deliverables || []; ROOMS = d.rooms || ROOMS;
+  CELEB.last = (EVENTS.filter(e => e.kind === "milestone").pop() || {}).time || "";
+  render();
+}
+// Keep the page in step with the company files without losing what the founder is typing.
+async function sync(){
+  try{
+    const d = await (await fetch("/api/state")).json();
+    const typedWas = JSON.stringify(TYPING); TYPING = d.typing || {};
+    const engineWas = ENGINE; ENGINE = d.engine || ENGINE;
+    ENGINE_WHY = d.engineWhy || ""; ENGINE_AT = d.engineChecked || "";
+    const liveWas = JSON.stringify(LIVE); LIVE = d.live || LIVE;
+    const filesWas = FILES.length; FILES = d.files || FILES;
+    const sideWas = EVENTS.length+"/"+(EVENTS.length ? EVENTS[EVENTS.length-1].time : "")+"/"+JSON.stringify(DELIV).length;
+    EVENTS = d.events || EVENTS; MEM = d.memory || MEM; DELIV = d.deliverables || DELIV; ROOMS = d.rooms || ROOMS;
+    const stage = EVENTS.filter(e => e.kind === "milestone").pop();
+    if (stage && stage.time > CELEB.last){ CELEB.last = stage.time; CELEB.text = stage.text; setTimeout(() => { CELEB.text = ""; render(); }, 9000); }
+    const typedChanged = typedWas !== JSON.stringify(TYPING);
+    const restChanged = sideWas !== EVENTS.length+"/"+(EVENTS.length ? EVENTS[EVENTS.length-1].time : "")+"/"+JSON.stringify(DELIV).length || filesWas !== FILES.length || engineWas !== ENGINE || liveWas !== JSON.stringify(LIVE) || JSON.stringify(d.meeting) !== JSON.stringify(M) || JSON.stringify(d.comms).length !== JSON.stringify(C).length;
+    const changed = typedChanged || restChanged;
+    if (JSON.stringify(d.comms).length !== JSON.stringify(C).length) P.done = false;
+    S = d.state; C = d.comms || C; SO = d.social || SO; M = d.meeting || M;
+    PROMPTS = d.prompts || PROMPTS; MODELS = d.models || MODELS; APIK = d.api || APIK; READY = !!d.ready;
+    if (!changed || tab === "agents" || (tab === "documents" && openFile)) return;   // never redraw a form the founder is filling in
+    if (!restChanged && renderTyping()) return;      // only the words grew: write them, leave the page alone
+    const active = document.activeElement, boxId = active && ["chatInput","roomInput"].includes(active.id) ? active.id : "", at = boxId ? active.selectionStart : 0;
+    render();
+    if (boxId){ const b = document.getElementById(boxId); if (b){ b.focus(); b.setSelectionRange(at, at); } }
+  }catch(e){}
+}
+function dayThreads(date){
+  const last = C.threads[C.threads.length-1], day = date || (last && last.date);
+  return day ? C.threads.filter(t => t.date === day) : [];
+}
+const today = () => { const d = new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); };
+const allDays = () => [...new Set(C.threads.map(t => t.date))].sort().reverse();
+// Live shows only what the company does today while you watch; History shows every conversation of one date.
+function officeThreads(){
+  return OFFICE.mode === "live" ? C.threads.filter(t => t.live && t.date === today()) : dayThreads(OFFICE.date || allDays()[0]);
+}
+function tick(){
+  if ((tab !== "office" && tab !== "campus") || P.paused || profileId || OFFICE.busy) return;
+  const typingNow = document.activeElement && ["chatInput","roomInput"].includes(document.activeElement.id);
+  if (typingNow && (OFFICE.say || CHAT.draft)) return;   // do not redraw under the founder's hands
+  if (MV.listening) return;
+  const ts = officeThreads(); if (!ts.length) return;
+  const t = ts.find(x => x.id === P.tid);
+  if (!t){ P.tid = (OFFICE.mode === "live" ? ts[ts.length-1] : ts[0]).id; P.idx = 0; P.done = false; }
+  else if (MV.mode === "voice" && ROOMV.open && t.room){ meetVoiceStep(); return; }   // in voice mode the voices set the pace
+  else if (P.idx <= t.messages.length) P.idx++;
+  else if (t.status === "live") return;   // the meeting goes on: wait for the next people to speak
+  else { const i = ts.indexOf(t);
+    if (i < ts.length-1){ P.tid = ts[i+1].id; P.idx = 0; P.done = false; }
+    else if (P.done) return;          // waiting for the next activity
+    else P.done = true; }
+  render();
+}
+
+// Shown wherever the founder talks to the company while the real engine is switched off.
+async function recheckEngine(btn){
+  if (btn) { btn.disabled = true; btn.textContent = "Checking…"; }
+  try{
+    const r = await (await fetch("/api/engine/recheck",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"})).json();
+    ENGINE = r.engine || ENGINE; ENGINE_WHY = r.why || ""; ENGINE_AT = r.checked || "";
+    toast(ENGINE === "claude" ? "The real company is on." : "Still off: " + (ENGINE_WHY || "not signed in"));
+    await load();
+  }catch(e){ toast("Could not check: " + e.message); if (btn) { btn.disabled = false; btn.textContent = "Check again"; } }
+}
+const engineNote = () => ENGINE === "backup" && !READY ? h("div",{class:"view",style:"border-color:var(--bad);margin:0 0 14px"},
+  h("b",{},"The real brains of the company are switched off. "),
+  "A small backup model is answering instead. It is not intelligent enough: it repeats itself and mixes things up, and the teams do not react to your decisions.",
+  h("div",{class:"small",style:"margin:6px 0"}, h("b",{},"Reason: "), ENGINE_WHY || "Claude Code is not signed in on this PC.", ENGINE_AT ? " (checked at "+ENGINE_AT+")" : ""),
+  h("div",{}, "If you have just signed in, press Check again. If it still says signed out, double-click “Login Company Brain.bat” in the company folder, sign in once in the browser page that opens, then press Check again."),
+  h("div",{class:"actions"}, h("button",{class:"btn primary",onclick:e=>recheckEngine(e.target)},"Check again"))) : null;
+const bubble = (m, isNew) => { const a = agent(m.from);
+  return h("div",{class:"msg"+(isNew?" new":"")}, avatar(a), h("div",{class:"bubble"},
+    h("div",{class:"who"}, label(a)+" → "+(m.to==="all" ? "Everyone" : label(agent(m.to)))), m.text)); };
+const outcome = t => [ t.summary ? h("div",{class:"view",style:"border-color:var(--accent)"}, h("b",{},"Summary: "), t.summary) : null,
+  t.sources && t.sources.length ? h("div",{class:"small",style:"margin:6px 0"}, h("b",{},"Web pages read: "), t.sources.filter(u => /^https:\/\//.test(u)).map(u => [h("a",{href:u,target:"_blank",rel:"noopener"}, u.split("/")[2]), " "])) : null,
+  t.actions && t.actions.length ? h("ul",{class:"small",style:"margin:6px 0 0;padding-left:20px"}, t.actions.map(a => h("li",{},a))) : null ];
+
+/* ---------- Office: the home page ---------- */
+let NOW = null;   // who is speaking to whom right now: {from, targets[], text}
+function vOffice(){
+  const live = OFFICE.mode === "live", ts = officeThreads(), t = ts.find(x => x.id === P.tid) || null;
+  const shown = t ? t.messages.slice(0, P.idx) : [];
+  const msg = t && P.idx >= 1 && P.idx <= t.messages.length ? t.messages[P.idx-1] : null;
+  const finished = t && P.idx > t.messages.length;
+  const room = new Set(t && !finished ? t.participants : []);
+  if (M.busy) NOW = {from:M.busy, targets:["founder"], text:"Writing an answer to you…"};
+  else if (msg) NOW = {from:msg.from, targets: msg.to === "all" ? t.participants.filter(x => x !== msg.from) : [msg.to], text:msg.text};
+  else NOW = null;
+  const quiet = !NOW && !room.size;
+  const desk = (a, kind) => {
+    const speaking = NOW && NOW.from === a.id, hearing = NOW && NOW.targets.includes(a.id), inRoom = room.has(a.id) || speaking || hearing;
+    const doing = live ? (LIVE.statuses[a.id] || "") : "";
+    const where = t && t.room ? "in the "+t.room : "in the meeting";
+    const state = speaking ? "speaking"+(t && t.room ? " · "+t.room : "") : hearing ? "listening"+(t && t.room ? " · "+t.room : "") : room.has(a.id) ? where : short(doing, 60);
+    const screenOn = live && LIVE.on && (doing || speaking || hearing);
+    const open = () => { if (a.id === "founder") go("founder"); else { profileId = a.id; render(); } };
+    const label_ = h("div",{class:"desk-name"}, a.id === "founder" ? "You" : nm(a), a.name || a.id === "founder" ? h("div",{class:"desk-state"},a.title) : null,
+      state ? h("div",{class:"desk-state",style:"color:var(--accent)"},state) : null);
+    if (kind)   // a glass cabin with a nameplate, a desk and a monitor
+      return h("button",{class:"desk cabin "+kind+(speaking?" speak":inRoom?" in":(quiet || doing)?" idle":""), style:"--c:"+a.color, "data-id":a.id, title:nm(a)+", "+a.title+(doing ? " · "+doing : ""), onclick:open},
+        h("div",{class:"plate"}, a.id === "founder" ? "Founder's office" : a.reportsTo === "founder" ? "Front desk" : kind === "exec-cabin" ? "CEO's office" : "Cabin · "+a.dept),
+        h("div",{class:"row",style:"gap:10px;align-items:center"}, h("div",{class:"seat-wrap"}, avatar(a)), label_,
+          h("div",{class:"mini-ws"}, h("div",{class:"ws-monitor"+(screenOn?" on":"")}), h("div",{class:"ws-top"}))),
+        speaking ? h("div",{class:"say"}, short(NOW.text, 150)) : null);
+    return h("button",{class:"desk ws"+(speaking?" speak":inRoom?" in":(quiet || doing)?" idle":""), style:"--c:"+a.color, "data-id":a.id, title:nm(a)+", "+a.title+(doing ? " · "+doing : ""), onclick:open},
+      h("div",{class:"ws-monitor"+(screenOn?" on":"")}), h("div",{class:"ws-top"}),
+      h("div",{class:"seat-wrap"}, avatar(a, true)), label_,
+      speaking ? h("div",{class:"say"}, short(NOW.text, 150)) : null);
+  };
+  const heads = S.agents.filter(a => a.id !== "ceo"), days = allDays(), day = OFFICE.date || days[0] || "";
+  const jump = id => { P.tid = id; P.idx = 0; P.done = false; P.paused = false; render(); };
+  const mode = m => { OFFICE.mode = m; P.tid = null; P.idx = 0; P.done = false; P.paused = false; render(); };
+  const speech = h("textarea",{id:"chatInput",placeholder:"Speak to everyone: your vision, your direction, what you expect. The whole company hears it and starts from it."}); speech.value = CHAT.draft;
+  speech.addEventListener("input", () => CHAT.draft = speech.value);
+  const addressAll = async () => { const text = speech.value.trim(); if (!text) return toast("Write what you want to say first");
+    try{ const d = await post("/api/address",{text}); if (d.error) return toast(d.error); CHAT.draft = ""; if (d.comms) C = d.comms; P.tid = null; toast("The whole company heard you"); }
+    catch(e){ toast("Could not send: "+e.message); } render(); };
+  const spoken = C.threads.some(x => x.type === "address");
+  const dates = h("select",{style:"width:auto"}, days.map(d => h("option",{value:d}, d+" · "+dayThreads(d).length+" conversations"))); dates.value = day;
+  dates.addEventListener("change", () => { OFFICE.date = dates.value; mode("history"); });
+  const pace = h("select",{style:"width:auto"}, h("option",{value:60},"Fast: every minute"), h("option",{value:120},"Normal: every 2 minutes"), h("option",{value:300},"Calm: every 5 minutes")); pace.value = LIVE.pace;
+  pace.addEventListener("change", () => setLive({pace:Number(pace.value)}));
+  const full = LIVE.count >= LIVE.limit && LIVE.day === today(), running = LIVE.on && ENGINE === "claude" && !full;
+  const liveLine =!LIVE.on ? "The company is offline. Press Go live to open the office."
+    : ENGINE !== "claude" ? "You are live, but the teams cannot work: the real engine is not logged in (see the red note above)."
+    : full ? "The teams reached today's limit of "+LIVE.limit+" activities. They continue tomorrow."
+    : "The teams are working now. Something new happens about every "+(LIVE.pace >= 120 ? (LIVE.pace/60)+" minutes" : LIVE.pace+" seconds")+" while this dashboard is open.";
+  const waiting = pendingList().length;
+  requestAnimationFrame(drawWires);
+  requestAnimationFrame(() => walkers(t, finished));
+  setTimeout(() => { const f = document.getElementById("feed"); if (f) f.scrollTop = f.scrollHeight; }, 0);
+  return [
+    h("h1",{},companyName()+" office"), h("p",{class:"sub"},"Every cabin, desk and meeting room of the company. Under each name you see what the person is doing; a moving line shows who is talking to whom. Click a person to see their work or to chat."),
+    LIVE.on ? engineNote() : offlineNote(),
+    h("div",{class:"stats",style:"align-items:center"},
+      h("button",{class:"chip"+(live?" cur":""),onclick:()=>mode("live")}, running ? h("span",{class:"live-dot"}) : null, "Live"),
+      h("button",{class:"chip"+(live?"":" cur"),onclick:()=>mode("history")},"History"),
+      live ? null : dates,
+      h("span",{style:"flex:1"}),
+      h("div",{class:"stat"}, h("b",{},everyone().length), "people"),
+      h("div",{class:"stat"}, h("b",{},ts.length), live ? "activities today" : "conversations on "+day),
+      h("button",{class:"stat",style:waiting?"border-color:var(--bad)":"",onclick:()=>go("founder")}, h("b",{},waiting), "waiting for your approval")),
+    h("div",{class:"office"},
+      h("div",{class:"floor",id:"floor"},
+        s("svg",{id:"wires"}),
+        h("div",{class:"reception"}, h("span",{}, "🏢 "+companyName()+" · reception"), h("span",{class:"small"}, new Date().toLocaleDateString([], {weekday:"long", day:"numeric", month:"long"})+" · "+new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"}))),
+        h("div",{class:"exec"}, team("founder").map(x => desk(x,"exec-cabin")), desk(FOUNDER,"exec-cabin"), desk(agent("ceo"),"exec-cabin")),
+        h("div",{class:"room-tag",style:"margin:0 0 6px"},"Meeting rooms"),
+        h("div",{class:"mrooms"}, ROOMS.rooms.map(r => {
+          const running = C.threads.find(x => x.status === "live" && x.room === r.name);
+          const inUse = (t && !finished && t.room === r.name) || !!running, nowT = Date.now()/1000;
+          const coming = ROOMS.bookings.filter(b => b.room === r.id && b.status === "booked" && b.end > nowT).sort((x,y) => x.start-y.start);
+          const held = ROOMS.bookings.filter(b => b.room === r.id && b.thread).sort((x,y) => y.start-x.start)[0];
+          return h("button",{class:"mroom"+(inUse?" busy":""),"data-room":r.name,title:"Open the room",onclick:()=>openRoom(r)},
+            h("div",{class:"room-name",style:"margin:0"}, r.name, h("span",{class:"pill "+(inUse ? "rejected" : coming.length ? "hold" : "approved")}, inUse ? "IN USE" : coming.length ? "BOOKED "+coming[0].from : "FREE")),
+            (() => { const inside = inUse ? (running && (!t || t.id !== running.id) ? running : t).participants : [];
+              const n = Math.min(r.seats, 12), chairs = [];
+              for (let i = 0; i < n; i++){ const ang = 2*Math.PI*i/n - Math.PI/2, who_ = inside[i] ? agent(inside[i]) : null;
+                chairs.push(h("span",{class:"chair"+(who_ ? " taken" : ""),style:"left:"+(50+44*Math.cos(ang))+"%;top:"+(50+38*Math.sin(ang))+"%;"+(who_ ? "background:"+who_.color : ""),title:who_ ? label(who_) : "free seat"})); }
+              return h("div",{class:"mini-room"}, h("div",{class:"mini-table"}, inUse ? h("span",{class:"live-dot",style:"margin:0"}) : null), chairs); })(),
+            h("div",{class:"small muted"}, r.seats+" seats"),
+            inUse && running && (!t || t.id !== running.id) ? [h("div",{style:"font-weight:600;font-size:13px"},running.title), h("div",{class:"small"}, h("span",{class:"live-dot"}), running.messages.length+" things said so far · click to join")]
+            : inUse ? [h("div",{style:"font-weight:600;font-size:13px"},t.title),
+                h("div",{class:"row",style:"gap:3px;flex-wrap:wrap"}, t.participants.map(pp => { const e = avatar(agent(pp),true); e.title = label(agent(pp)); if (msg && msg.from === pp) e.style.boxShadow = "0 0 0 3px var(--accent-fill)"; return e; })),
+                msg ? h("div",{class:"small"}, h("b",{},first(agent(msg.from))+": "), short(msg.text, 110)) : null]
+              : coming.length ? coming.slice(0,2).map(b => h("div",{class:"small"}, h("b",{},b.from+"-"+b.to+" "), b.title, h("span",{class:"muted"}," · booked by "+first(agent(b.by)))))
+              : h("div",{class:"small muted"}, held ? "Last: "+held.title+" ("+held.from+")" : "Nobody has used this room yet")); })),
+        h("div",{class:"rooms"}, heads.map(a => h("div",{class:"room"+([a, ...team(a.id)].some(x => room.has(x.id)) ? " busy" : ""),style:"--c:"+a.color},
+          h("div",{class:"room-name"}, h("span",{}, h("span",{class:"zone-dot"}), a.dept), h("span",{class:"small muted",style:"font-weight:400"}, (team(a.id).length+1)+" people")),
+          desk(a,"head"),
+          team(a.id).length ? [h("div",{class:"room-tag"},"Open desks"), h("div",{class:"desks"}, team(a.id).map(x => desk(x)))] : null,
+          h("span",{class:"door"}),
+          h("span",{class:"plant"},"🪴"))))),
+      h("div",{class:"now"},
+        live ? h("div",{class:"card"},
+          h("h3",{}, running ? h("span",{class:"live-dot"}) : null, running ? "Live now" : "Live work"),
+          h("p",{class:"small",style:"margin:0 0 10px"}, liveLine),
+          LIVE.error && running ? h("p",{class:"small",style:"margin:0 0 10px;color:var(--bad)"}, LIVE.error) : null,
+          h("div",{class:"actions",style:"margin:0"},
+            h("button",{class:"btn"+(LIVE.on?"":" primary"),onclick:()=>setLive({on:!LIVE.on})}, LIVE.on ? "Go offline" : "Go live"), pace),
+          LIVE.on ? h("div",{style:"margin-top:14px"}, h("h3",{}, spoken ? "Address the whole company" : "Start here: address the whole company"), speech,
+            h("div",{class:"actions"}, h("button",{class:"btn primary",onclick:addressAll},"Speak to everyone"))) : null) : null,
+        h("div",{class:"card"},
+          h("div",{class:"small muted"}, M.busy ? "Live chat" : t ? (TYPES[t.type]||t.type)+" · "+t.date+" "+t.time : live ? "Latest activity" : "Conversations"),
+          h("h2",{style:"margin:2px 0 8px"}, M.busy ? first(agent(M.busy))+" is answering you" : t ? t.title : live ? "Nothing has happened yet today" : "No conversations on this date"),
+          t ? h("div",{class:"row",style:"gap:4px;flex-wrap:wrap;margin-bottom:10px"}, t.participants.map(p => { const e = avatar(agent(p), true); e.title = label(agent(p)); return e; })) : null,
+          live ? null : h("div",{class:"actions",style:"margin:0 0 12px"},
+            h("button",{class:"btn",onclick:()=>{P.paused=!P.paused;render();}}, P.paused ? "Play" : "Pause"),
+            h("button",{class:"btn",onclick:()=>{ if (ts.length) jump(ts[0].id); }},"Replay this date")),
+          h("div",{class:"feed",id:"feed",style:"max-height:42vh"}, shown.map((m,i) => bubble(m, i === shown.length-1 && !finished)), finished ? outcome(t) : null,
+            OFFICE.busy ? h("div",{class:"msg"}, h("div",{class:"bubble muted"}, h("span",{class:"live-dot"}), "The room is answering you…")) : null,
+            !t ? h("p",{class:"muted",style:"margin:0"}, live ? "When the teams start working, each new conversation plays here as it happens. Older days are under History." : "Choose another date above.") : null)),
+        !ROOMV.open && live && LIVE.on && t && t.type !== "address" && t.type !== "invite" ? h("div",{class:"card"}, h("h3",{}, t.room ? "You are watching the "+t.room : "Join this conversation"),
+          speakBox(t)) : null,
+        ts.length ? h("div",{class:"card"}, h("h3",{}, live ? "Today so far" : "Conversations of "+day),
+          h("div",{class:"chips"}, ts.map((x,i) => h("button",{class:"chip"+(t && x.id===t.id?" cur":(t && i < ts.indexOf(t) ? " past":"")),onclick:()=>jump(x.id)}, x.time+" · "+x.title)))) : null))
+  ];
+}
+/* ---------- Meeting room window: table, seats, TV and whiteboard ---------- */
+async function sayInRoom(t){
+  const text = OFFICE.say.trim(); if (!text || OFFICE.busy || !t) return;
+  const to = ROOMV.pin && t.participants.includes(ROOMV.pin) ? ROOMV.pin : "all";
+  OFFICE.busy = true; OFFICE.say = ""; t.messages.push({from:"founder", to, text}); P.idx = t.messages.length; P.done = false; render();
+  try{ const d = await post("/api/room/say",{thread:t.id, text, to}); if (d.comms) C = d.comms; if (d.error) toast(d.error); }
+  catch(e){ toast("Could not send: "+e.message); }
+  OFFICE.busy = false; render();
+}
+function speakBox(t){
+  const pin = ROOMV.pin && t.participants.includes(ROOMV.pin) ? agent(ROOMV.pin) : null;
+  const box = h("textarea",{id:"roomInput",style:"min-height:52px",placeholder: pin ? "Ask "+first(pin)+" directly…" : "Speak to everyone in the room. Click a person at the table to talk to them only."}); box.value = OFFICE.say;
+  box.addEventListener("input", () => OFFICE.say = box.value);
+  box.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); sayInRoom(t); } });
+  return [pin ? h("div",{class:"chips",style:"margin-bottom:6px"}, h("span",{class:"chip cur"}, "📌 Talking to "+nm(pin)+" ("+pin.title+")"),
+      h("button",{class:"chip",onclick:()=>{ ROOMV.pin = ""; render(); }},"✕ talk to everyone")) : null,
+    box, h("div",{class:"actions"}, h("button",{class:"btn primary",onclick:()=>sayInRoom(t)}, OFFICE.busy ? "Waiting…" : pin ? "Ask "+first(pin) : "Speak to everyone"))];
+}
+/* voice view: each person speaks with their own voice; the founder can interrupt by talking */
+const MV = {mode:"chat", speaking:false, listening:false, rec:null, heard:""};
+function voiceSettings(id){
+  const a = agent(id); let n = 0; for (const c of id) n = (n*31 + c.charCodeAt(0)) >>> 0;
+  const senior = !a.reportsTo, spread = ((n % 7) - 3) * 0.03;   // every person a little different
+  return { pitch: a.pitch || ((a.gender === "female" ? 1.08 : 0.92) + spread + (senior ? -0.04 : 0.03)),
+           rate: a.rate || (id === "ceo" ? 0.92 : senior ? 0.97 : 1.05) + spread/2 };
+}
+function voiceFor(id){
+  const a = agent(id), all = (window.speechSynthesis ? speechSynthesis.getVoices() : []).filter(v => v.lang.startsWith("en"));
+  const chosen = a.voice && all.find(v => v.name === a.voice); if (chosen) return chosen;
+  const woman = /heera|neerja|swara|zira|aria|jenny|sonia|susan|hazel|libby|natasha|clara|emma|female|woman/i;
+  const fit = all.filter(v => (a.gender === "female") === woman.test(v.name)), pool = fit.length ? fit : all;
+  let n = 0; for (const c of id) n = (n*31 + c.charCodeAt(0)) >>> 0;
+  return pool.length ? pool[n % pool.length] : null;
+}
+function meetHush(){ MV.speaking = false; if (window.speechSynthesis) speechSynthesis.cancel(); }
+function meetVoiceStep(){
+  if (MV.mode !== "voice" || !ROOMV.open || MV.speaking || MV.listening || !window.speechSynthesis) return;
+  const th = C.threads.find(x => x.id === P.tid); if (!th) return;
+  const next = th.messages[P.idx]; if (!next) return;
+  P.idx++; render();
+  if (next.from === "founder") return setTimeout(meetVoiceStep, 300);
+  const u = new SpeechSynthesisUtterance(next.text), a = agent(next.from);
+  u.voice = voiceFor(next.from); u.lang = u.voice ? u.voice.lang : "en-IN"; { const vs = voiceSettings(next.from); u.rate = vs.rate; u.pitch = vs.pitch; }
+  MV.speaking = true;
+  let finished = false;
+  const done = () => { if (finished) return; finished = true; MV.speaking = false; render(); setTimeout(meetVoiceStep, 450); };
+  u.onend = u.onerror = done;
+  setTimeout(done, 4000 + next.text.length * 90);   // some browsers never report the end of speech: carry on anyway
+  speechSynthesis.speak(u);
+}
+function meetTalk(th){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (MV.listening){ if (MV.rec) MV.rec.stop(); return; }
+  if (!SR) return toast("Talking needs the Chrome or Edge browser. You can type instead.");
+  meetHush(); MV.listening = true; MV.heard = ""; render();
+  const rec = new SR(); let said = "";
+  rec.lang = VOICE.lang; rec.interimResults = true; rec.continuous = false; MV.rec = rec;
+  rec.onresult = e => { let live = ""; said = ""; for (const x of e.results){ if (x.isFinal) said += x[0].transcript; else live += x[0].transcript; }
+    MV.heard = (said+" "+live).trim(); render(); };
+  rec.onerror = e => { if (e.error !== "no-speech" && e.error !== "aborted") toast(e.error === "not-allowed" ? "Allow the microphone for this page." : "Voice stopped: "+e.error); };
+  rec.onend = () => { MV.listening = false; MV.rec = null; const text = said.trim(); MV.heard = ""; render();
+    if (text){ OFFICE.say = text; sayInRoom(th); } else setTimeout(meetVoiceStep, 300); };
+  try{ rec.start(); }catch(e){ MV.listening = false; }
+}
+function openRoom(r){
+  ROOMV.open = r.id; ROOMV.slide = -1;
+  const running = C.threads.find(x => x.status === "live" && x.room === r.name);
+  if (running && P.tid !== running.id){   // join a running meeting near its latest words
+    OFFICE.mode = "live"; P.tid = running.id; P.idx = Math.max(0, running.messages.length - 2); P.done = false; P.paused = false; }
+  render();
+}
+function watch(th){   // play one conversation, from today's live work or from history
+  OFFICE.mode = th.live && th.date === today() ? "live" : "history"; OFFICE.date = th.date;
+  P.tid = th.id; P.idx = 0; P.done = false; P.paused = false; ROOMV.slide = -1; render();
+}
+function chartSvg(c){
+  const W = 480, H = 190, pad = 30, vals = c.points.map(p => p.value), top = Math.max(...vals, 1), n = c.points.length;
+  const x = i => pad + (W-2*pad) * (n === 1 ? 0.5 : c.type === "line" ? i/(n-1) : (i+0.5)/n), y = v => H-34 - (H-64) * Math.max(v,0)/top;
+  const fmt = v => Math.abs(v) >= 1000 ? (v/1000).toFixed(1).replace(".0","")+"k" : String(Math.round(v*10)/10);
+  const svg = s("svg",{viewBox:"0 0 "+W+" "+H,style:"width:100%;max-height:230px"});
+  svg.append(s("line",{x1:pad-10,y1:H-34,x2:W-pad+10,y2:H-34,stroke:"#3b4770","stroke-width":1}));
+  if (c.type === "line") svg.append(s("polyline",{points:c.points.map((p,i) => x(i)+","+y(p.value)).join(" "),fill:"none",stroke:"#00E5C0","stroke-width":3,"stroke-linejoin":"round"}));
+  c.points.forEach((p,i) => {
+    if (c.type === "line") svg.append(s("circle",{cx:x(i),cy:y(p.value),r:5,fill:"#00E5C0"}));
+    else { const w = Math.min(54, (W-2*pad)/n*0.6); svg.append(s("rect",{x:x(i)-w/2,y:y(p.value),width:w,height:H-34-y(p.value),rx:4,fill:"#00E5C0"})); }
+    svg.append(s("text",{x:x(i),y:y(p.value)-8,"text-anchor":"middle","font-size":13,"font-weight":700,fill:"#fff"},fmt(p.value)));
+    svg.append(s("text",{x:x(i),y:H-14,"text-anchor":"middle","font-size":12,fill:"#aeb6d0"},p.label)); });
+  return svg;
+}
+function callForm(r){
+  if (!LIVE.on) return h("p",{class:"muted",style:"margin:0"},"Nobody is meeting here now. Go live to call a meeting.");
+  if (!ROOMV.call) ROOMV.call = {topic:"", people:new Set(S.agents.filter(a => a.id !== "ceo").map(a => a.id))};
+  const c = ROOMV.call, topic = h("input",{type:"text",placeholder:"What is the meeting about?",maxlength:"120"}); topic.value = c.topic;
+  topic.addEventListener("input", () => c.topic = topic.value);
+  const pick = a => h("button",{class:"chip"+(c.people.has(a.id) ? " cur" : ""),onclick:()=>{ c.people.has(a.id) ? c.people.delete(a.id) : c.people.add(a.id); render(); }}, nm(a));
+  const call = async () => { if (!c.topic.trim()) return toast("Write what the meeting is about");
+    try{ const d = await post("/api/room/call",{room:r.id, people:[...c.people], topic:c.topic.trim()}); if (d.error) return toast(d.error);
+      toast("Meeting called. The people are walking to the "+r.name+"…"); ROOMV.call = null; }catch(e){ toast("Could not call: "+e.message); } render(); };
+  return [h("p",{class:"small muted",style:"margin:0 0 8px"},"Nobody is meeting here now. Call a meeting yourself: choose who comes, say what it is about, and it starts at once with you in the room."),
+    topic, h("div",{class:"small muted",style:"margin:8px 0 4px"},"Who comes (the CEO always comes):"),
+    h("div",{class:"chips"}, S.agents.filter(a => a.id !== "ceo").map(pick)),
+    h("details",{style:"margin-top:6px"}, h("summary",{},"Add team members"), h("div",{class:"chips",style:"margin-top:6px"}, staff().filter(a => a.reportsTo !== "founder").map(pick))),
+    h("div",{class:"actions"}, h("button",{class:"btn primary",onclick:call},"Call the meeting now"))];
+}
+function roomWindow(){
+  const r = ROOMS.rooms.find(x => x.id === ROOMV.open); if (!r) return [];
+  const playing = officeThreads().find(x => x.id === P.tid) || C.threads.find(x => x.id === P.tid) || C.threads.find(x => x.status === "live" && x.room === r.name) || null;
+  const here = playing && playing.room === r.name ? playing : null;
+  const msg = here && P.idx >= 1 && P.idx <= here.messages.length ? here.messages[P.idx-1] : null;
+  const finished = here && here.status !== "live" && P.idx > here.messages.length;
+  const nowT = Date.now()/1000, coming = ROOMS.bookings.filter(b => b.room === r.id && b.status === "booked" && b.end > nowT).sort((x,y) => x.start-y.start);
+  const held = C.threads.filter(x => x.room === r.name).slice(-8).reverse();
+  const people = here ? here.participants : [], slides = here && here.slides ? here.slides : [];
+  const auto = slides.length ? Math.min(slides.length-1, Math.floor((Math.max(P.idx,1)-1) / Math.max(1,here.messages.length) * slides.length)) : 0;
+  const si = ROOMV.slide >= 0 && ROOMV.slide < slides.length ? ROOMV.slide : auto, slide = slides[si];
+  const close = () => { ROOMV.open = ""; meetHush(); render(); };
+  const going = here && here.status === "live";
+  const seat = (id, i) => { const a = agent(id), ang = 2*Math.PI*i/Math.max(people.length,1) - Math.PI/2, talking = msg && msg.from === id;
+    return h("div",{class:"seat"+(talking?" talking":"")+(ROOMV.pin === id ? " pinned" : ""),title: id === "founder" ? "You" : "Click to talk to "+nm(a)+" only",
+      onclick:()=>{ if (id === "founder") return; ROOMV.pin = ROOMV.pin === id ? "" : id; render(); const b = document.getElementById("roomInput"); if (b) b.focus(); },
+      style:"left:"+(50+43*Math.cos(ang))+"%;top:"+(50+40*Math.sin(ang))+"%;--c:"+a.color+";cursor:pointer"},
+      ROOMV.pin === id ? h("div",{class:"pin"},"📌") : null,
+      talking ? h("div",{class:"say",style:"width:210px"}, short(msg.text, 140)) : null, avatar(a), h("div",{class:"seat-name"}, first(a)), h("div",{class:"seat-role"}, id === "founder" ? "Founder" : a.title)); };
+  const tv = slide ? [ h("div",{class:"tv-top"}, h("span",{}, "ON SCREEN · slide "+(si+1)+" of "+slides.length+(slide.by ? " · presented by "+first(agent(slide.by)) : "")),
+        h("span",{}, h("button",{class:"tvbtn",onclick:()=>{ROOMV.slide = Math.max(0, si-1);render();}},"‹"), h("button",{class:"tvbtn",onclick:()=>{ROOMV.slide = Math.min(slides.length-1, si+1);render();}},"›"),
+          ROOMV.slide >= 0 ? h("button",{class:"tvbtn",style:"width:auto;padding:0 8px",onclick:()=>{ROOMV.slide=-1;render();}},"follow the talk") : null)),
+      h("h2",{style:"margin:4px 0 8px;color:#fff;font-size:21px"},slide.title),
+      h("div",{class:"tv-body"}, slide.bullets.length ? h("ul",{}, slide.bullets.map(x => h("li",{},x))) : null,
+        slide.chart ? h("div",{style:"flex:1;min-width:240px"}, chartSvg(slide.chart), h("div",{class:"tv-note"}, [slide.chart.unit, slide.chart.note].filter(Boolean).join(" · "))) : null) ]
+    : here ? [ h("div",{class:"tv-top"}, h("span",{},(TYPES[here.type]||here.type).toUpperCase()+" · "+here.time)), h("h2",{style:"margin:8px 0;color:#fff;font-size:22px"},here.title),
+        h("div",{class:"tv-note",style:"font-size:14px"}, finished && here.summary ? here.summary : "Host: "+nm(agent(here.messages[0].from))+" · "+people.length+" people in the room") ]
+    : [ h("div",{class:"tv-top"}, h("span",{},"TV OFF")), h("h2",{style:"margin:8px 0;color:#7c86a8;font-size:20px"}, coming.length ? "Next: "+coming[0].title+" at "+coming[0].from : "No meeting in this room now") ];
+  return [ h("div",{class:"shade",onclick:close}),
+    h("div",{class:"roomwin"},
+      h("div",{class:"idea-head",style:"margin-bottom:12px"}, h("div",{}, h("div",{class:"small muted"}, r.seats+" seats · "+(going ? "LIVE meeting" : here && !finished ? "meeting in progress" : coming.length ? "booked for "+coming[0].from : "free now")), h("h1",{style:"margin:0"},r.name)),
+        h("div",{class:"actions",style:"margin:0"}, here ? h("button",{class:"btn",onclick:()=>{P.paused=!P.paused;render();}}, P.paused ? "Play" : "Pause") : null, h("button",{class:"btn",onclick:close},"Leave the room"))),
+      h("div",{class:"roomgrid"},
+        h("div",{},
+          h("div",{class:"tv"}, tv),
+          h("div",{class:"hall"}, h("div",{class:"table"}, here ? h("div",{}, h("b",{},here.title), h("div",{class:"small"}, msg ? first(agent(msg.from))+" is speaking" : finished ? "Meeting finished" : going ? (here.messages.length ? "Someone is about to speak…" : "Starting…") : "Meeting finished")) : "Empty table"),
+            people.map(seat), !people.length ? Array.from({length:Math.min(r.seats,8)}, (_,i) => { const ang = 2*Math.PI*i/Math.min(r.seats,8) - Math.PI/2;
+              return h("div",{class:"seat empty",style:"left:"+(50+43*Math.cos(ang))+"%;top:"+(50+40*Math.sin(ang))+"%"}, h("div",{class:"avatar",style:"background:var(--line)"},"")); }) : null)),
+        h("div",{},
+          h("div",{class:"card",style:"margin-bottom:12px"}, h("h3",{}, here ? "What is being said" : "This room"),
+            here ? h("div",{class:"chips",style:"margin-bottom:10px"},
+                h("button",{class:"chip"+(MV.mode === "chat" ? " cur" : ""),onclick:()=>{ MV.mode = "chat"; meetHush(); render(); }},"💬 Chat view"),
+                h("button",{class:"chip"+(MV.mode === "voice" ? " cur" : ""),onclick:()=>{ if (!window.speechSynthesis || !speechSynthesis.getVoices().length){ toast("No voices here. Open the dashboard in Chrome or Edge to listen."); return; } MV.mode = "voice"; render(); meetVoiceStep(); }},"🔊 Voice view: listen")) : null,
+            here && MV.mode === "voice" ? h("div",{class:"view",style:"border-color:var(--accent);margin:0 0 10px"}, MV.listening ? [h("span",{class:"live-dot"}), "Listening to you… ", h("b",{},MV.heard)]
+                : MV.speaking ? [h("b",{},first(agent(here.messages[P.idx-1] ? here.messages[P.idx-1].from : "ceo"))), " is speaking. Press Interrupt to talk."]
+                : going ? "Waiting for the next person to speak…" : "Everyone has spoken.") : null,
+            here ? h("div",{class:"feed",id:"feed",style:"max-height:34vh"}, here.messages.slice(0,P.idx).map((m,i) => bubble(m, i === P.idx-1 && !finished)),
+                going && P.idx >= here.messages.length ? h("div",{class:"msg"}, h("div",{class:"bubble muted"}, h("span",{class:"live-dot"}),
+              here.messages.length && here.messages[here.messages.length-1].from === "founder" ? "They heard you. Someone is about to answer…" : "The meeting goes on… someone is about to speak")) : null,
+                OFFICE.busy ? h("div",{class:"msg"}, h("div",{class:"bubble muted"}, h("span",{class:"live-dot"}), "The room is answering you…")) : null)
+              : callForm(r),
+            here && LIVE.on && OFFICE.mode === "live" ? h("div",{style:"margin-top:10px"}, speakBox(here),
+              h("button",{class:"btn"+(MV.listening ? " sel-rejected" : ""),style:"margin-top:6px",onclick:()=>meetTalk(here)}, MV.listening ? "■ Stop listening" : "🎤 Interrupt and talk")) : null),
+          h("div",{class:"card whiteboard",style:"margin-bottom:12px"}, h("h3",{},"Whiteboard · tasks agreed"),
+            here && here.actions && here.actions.length && finished ? h("ul",{style:"margin:0;padding-left:20px"}, here.actions.map(x => h("li",{},x)))
+              : h("p",{class:"muted small",style:"margin:0"}, here ? "The tasks are written here when the meeting ends." : "Empty.")),
+          h("div",{class:"card",style:"margin:0"}, h("h3",{},"Bookings and earlier meetings"),
+            coming.map(b => h("div",{class:"small",style:"margin-bottom:4px"}, h("span",{class:"pill hold"},b.from+"-"+b.to), " ", b.title, h("span",{class:"muted"}," · host "+first(agent(b.by))))),
+            h("div",{class:"chips",style:"margin-top:6px"}, held.map(x => h("button",{class:"chip"+(here && x.id === here.id ? " cur" : ""),onclick:()=>watch(x)}, x.date.slice(5)+" "+x.time+" · "+x.title))),
+            !coming.length && !held.length ? h("p",{class:"muted small",style:"margin:0"},"No bookings yet.") : null))))];
+}
+const WALK = {in:new Set(), out:new Set()};
+const calm = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+function walk(ids, roomName, back){
+  const table = document.querySelector('.mroom[data-room="'+roomName+'"] .mini-table'), layer = document.getElementById("walkers");
+  if (!table || !layer || calm()) return;
+  const r = table.getBoundingClientRect(), mid = {x:r.left + r.width/2, y:r.top + r.height/2};
+  ids.slice(0, 14).forEach((id, i) => {
+    const seat = document.querySelector('#floor [data-id="'+id+'"] .avatar'); if (!seat) return;
+    const s = seat.getBoundingClientRect(), desk_ = {x:s.left + s.width/2, y:s.top + s.height/2};
+    const spot = {x:mid.x + Math.cos(i*1.7)*r.width*0.42, y:mid.y + Math.sin(i*1.7)*r.height*0.5};
+    const from = back ? spot : desk_, to = back ? desk_ : spot, dx = to.x - from.x, dy = to.y - from.y;
+    const ghost = avatar(agent(id), true); ghost.classList.add("walker");
+    ghost.style.left = (from.x - 15)+"px"; ghost.style.top = (from.y - 15)+"px"; layer.append(ghost);
+    const lift = -Math.min(60, 20 + Math.abs(dx)*0.08);
+    ghost.animate([
+      {transform:"translate(0,0) scale(.7)", opacity:0},
+      {transform:"translate(0,-6px) scale(1)", opacity:1, offset:.12},
+      {transform:"translate("+dx*0.5+"px,"+(dy*0.5+lift)+"px) scale(1.08)", offset:.55},
+      {transform:"translate("+dx+"px,"+dy+"px) scale(.95)", opacity:1, offset:.9},
+      {transform:"translate("+dx+"px,"+dy+"px) scale(.6)", opacity:0}],
+      {duration:1500 + i*60, delay:i*110, easing:"cubic-bezier(.45,.05,.3,1)", fill:"both"}).onfinish = () => ghost.remove();
+  });
+}
+function walkers(t, finished){
+  if (tab !== "office" || OFFICE.mode !== "live" || !t || !t.room) return;
+  const people = t.participants.filter(x => x !== "founder");
+  if (!finished && !WALK.in.has(t.id)){ WALK.in.add(t.id); if (P.idx <= 2) walk(people, t.room, false); }
+  else if (finished && WALK.in.has(t.id) && !WALK.out.has(t.id)){ WALK.out.add(t.id); walk(people, t.room, true); }
+}
+function drawWires(){
+  const floor = document.getElementById("floor"), svg = document.getElementById("wires");
+  if (!floor || !svg) return;
+  const box = floor.getBoundingClientRect(); svg.replaceChildren(); svg.setAttribute("viewBox","0 0 "+box.width+" "+box.height);
+  if (!NOW) return;
+  const centre = id => { const e = floor.querySelector('[data-id="'+id+'"] .avatar'); if (!e) return null;
+    const r = e.getBoundingClientRect(); return [r.left-box.left+r.width/2, r.top-box.top+r.height/2]; };
+  const a = centre(NOW.from); if (!a) return;
+  for (const id of NOW.targets){ const b = centre(id); if (!b) continue;
+    const lift = 30 + Math.abs(b[0]-a[0])*0.08;
+    const d = "M"+a[0]+" "+a[1]+" Q"+(a[0]+b[0])/2+" "+(Math.min(a[1],b[1])-lift)+" "+b[0]+" "+b[1];
+    svg.append(s("path",{d, fill:"none", stroke:agent(NOW.from).color, "stroke-width":3, "stroke-linecap":"round", opacity:.75, class:"talk"}));
+    if (!calm()) svg.append(s("circle",{r:5, fill:"#fff", stroke:agent(NOW.from).color, "stroke-width":3},
+      s("animateMotion",{dur:"1.4s", repeatCount:"indefinite", path:d}))); }
+}
+
+/* ---------- Campus: the whole company in 3D ---------- */
+// The camera lives in CSS variables on <html>, not in the page markup, so turning the campus
+// never counts as "the page changed" and never restarts what is moving on it.
+const CAMV = {rx:58, rz:-32, zm:0, auto:true, sel:"", drag:null, moved:false};
+function camApply(){
+  const r = document.documentElement.style;
+  r.setProperty("--rx", CAMV.rx.toFixed(2)+"deg"); r.setProperty("--rz", CAMV.rz.toFixed(2)+"deg"); r.setProperty("--zm", (CAMV.zm || .6).toFixed(3));
+}
+function camFit(){
+  const c = document.getElementById("campus"); if (!c) return;
+  const wide = c.clientWidth > 1000 ? c.clientWidth - 346 : c.clientWidth;
+  CAMV.zm = Math.max(.3, Math.min(1.1, Math.min(wide/1500, c.clientHeight/840))); camApply();
+}
+function camSet(change){ Object.assign(CAMV, change); CAMV.zm = Math.max(.25, Math.min(2, CAMV.zm)); camApply(); render(); }
+window.addEventListener("pointermove", e => { const d = CAMV.drag; if (!d) return;
+  const dx = e.clientX - d.x, dy = e.clientY - d.y; if (Math.abs(dx) + Math.abs(dy) > 5) CAMV.moved = true;
+  CAMV.rz = d.rz - dx*0.3; CAMV.rx = Math.max(18, Math.min(80, d.rx - dy*0.25)); camApply(); });
+window.addEventListener("pointerup", () => { if (!CAMV.drag) return; CAMV.drag = null;
+  const c = document.getElementById("campus"); if (c) c.classList.remove("grabbing");
+  setTimeout(() => { CAMV.moved = false; }, 0); });
+window.addEventListener("resize", () => { if (tab === "campus") camFit(); });
+(function camSpin(){
+  if (CAMV.auto && tab === "campus" && !CAMV.drag && !document.hidden && !profileId && !ROOMV.open && !calm()){ CAMV.rz -= 0.03; camApply(); }
+  requestAnimationFrame(camSpin);
+})();
+
+// Where every building stands: the HQ tower in the middle, one building per department in an arc
+// around it, and the meeting rooms as glass pavilions at the front.
+function campusMap(){
+  const cx = 750, cy = 470, heads = S.agents.filter(a => a.id !== "ceo"), n = heads.length, B = [];
+  B.push({id:"hq", kind:"hq", x:cx-85, y:cy-75, w:170, d:150, h:250, color:"#0a84ff", name:companyName()+" HQ", home:[...team("founder").map(x => x.id), "founder", "ceo"]});
+  heads.forEach((a,i) => { const ang = (150 + 240*(n > 1 ? i/(n-1) : .5)) * Math.PI/180, home = [a.id, ...team(a.id).map(x => x.id)];
+    B.push({id:a.id, kind:"dept", x:cx + 610*Math.cos(ang) - 62, y:cy + 400*Math.sin(ang) - 50, w:124, d:100, h:64 + 30*home.length, color:a.color, name:a.dept, home}); });
+  ROOMS.rooms.forEach((r,i) => { const big = r.seats > 8, w = big ? 200 : 150, d = big ? 130 : 110, k = ROOMS.rooms.length;
+    B.push({id:"room:"+r.id, kind:"pod", room:r, x:cx + (i-(k-1)/2)*250 - w/2, y:cy + 365 - d/2, w, d, h:34, color:"#7fd4ff", name:r.name, home:[]}); });
+  return B;
+}
+// Who stands where right now: at home, or in a meeting room while a meeting runs there.
+function campusPlaces(B, t, finished){
+  const at = {};
+  B.forEach(b => b.home.forEach(p => { at[p] = b.id; }));
+  const meet = th => { const pod = B.find(b => b.room && b.room.name === th.room);
+    if (pod) th.participants.forEach(p => { if (p !== "founder" && at[p]) at[p] = pod.id; }); };
+  if (OFFICE.mode === "live") C.threads.filter(x => x.status === "live" && x.room).forEach(meet);
+  if (t && !finished && t.room) meet(t);
+  return at;
+}
+function vCampus(){
+  const live = OFFICE.mode === "live", ts = officeThreads(), t = ts.find(x => x.id === P.tid) || null;
+  const shown = t ? t.messages.slice(0, P.idx) : [];
+  const msg = t && P.idx >= 1 && P.idx <= t.messages.length ? t.messages[P.idx-1] : null;
+  const finished = t && P.idx > t.messages.length;
+  const inTalk = new Set(t && !finished ? t.participants : []);
+  if (M.busy) NOW = {from:M.busy, targets:["founder"], text:"Writing an answer to you…"};
+  else if (msg) NOW = {from:msg.from, targets: msg.to === "all" ? t.participants.filter(x => x !== msg.from) : [msg.to], text:msg.text};
+  else NOW = null;
+  const B = campusMap(), at = campusPlaces(B, t, finished), byId = Object.fromEntries(B.map(b => [b.id, b]));
+  const here = b => Object.keys(at).filter(p => at[p] === b.id);
+  const centre = b => [b.x + b.w/2, b.y + b.d/2];
+  const stateOf = id => NOW && NOW.from === id ? "speaking" : NOW && NOW.targets.includes(id) ? "listening"
+    : inTalk.has(id) ? (t.room ? "in the "+t.room : "in a conversation") : (live && LIVE.on ? short(LIVE.statuses[id] || "", 70) : "");
+  const openPerson = id => { if (CAMV.moved) return; if (id === "founder") go("founder"); else { profileId = id; render(); } };
+  const pick = b => { if (CAMV.moved) return; if (b.room) return openRoom(b.room); CAMV.sel = CAMV.sel === b.id ? "" : b.id; render(); };
+
+  const peep = (id, x, y, z) => { const a = agent(id), st = stateOf(id), speaking = NOW && NOW.from === id, hearing = NOW && NOW.targets.includes(id);
+    return h("div",{class:"bill peep"+(speaking ? " speak" : hearing ? " hear" : st ? "" : " idle"), style:"left:"+x.toFixed(1)+"px;top:"+y.toFixed(1)+"px;--z:"+z+"px;--c:"+a.color, title:(id === "founder" ? "You, the founder" : label(a))+(st ? " · "+st : ""),
+        onclick:e => { e.stopPropagation(); openPerson(id); }},
+      h("div",{class:"peep-body"},
+        speaking ? h("div",{class:"peep-say"}, h("b",{}, first(a)+": "), short(NOW.text, 130)) : null,
+        h("div",{class:"peep-head"}, a.short), h("div",{class:"peep-stem"}))); };
+  const building = b => { const people = here(b), n = people.length;
+    const active = people.some(p => inTalk.has(p) || (NOW && (NOW.from === p || NOW.targets.includes(p)))) || (b.room && C.threads.some(x => x.status === "live" && x.room === b.room.name));
+    const lit = live && LIVE.on && people.some(p => LIVE.statuses[p]);
+    const cols = n <= 4 ? Math.max(n,1) : Math.ceil(n/2), rows = Math.max(1, Math.ceil(n/cols));
+    return h("div",{class:"bld "+b.kind+(active ? " active" : "")+(lit ? " lit" : "")+(CAMV.sel === b.id ? " sel" : ""), "data-b":b.id,
+        style:"left:"+b.x.toFixed(1)+"px;top:"+b.y.toFixed(1)+"px;width:"+b.w+"px;height:"+b.d+"px;--h:"+b.h+"px;--c:"+b.color, onclick:() => pick(b)},
+      h("div",{class:"f base"}), h("div",{class:"f side back"}), h("div",{class:"f side left"}), h("div",{class:"f side right"}), h("div",{class:"f side front"}), h("div",{class:"f top"}),
+      h("div",{class:"bill tag",style:"left:50%;top:50%;--z:"+(b.h + (n ? 66 : 20))+"px"},
+        h("div",{class:"tag-body"}, active ? h("span",{class:"live-dot",style:"margin:0"}) : h("i",{}), b.name, h("span",{class:"tag-n"}, b.room ? (n ? n+" inside" : b.room.seats+" seats") : n))),
+      people.map((p,i) => peep(p, b.w*((i % cols)+1)/(cols+1), b.d*(Math.floor(i/cols)+1)/(rows+1), b.h))); };
+
+  const hq = byId.hq, lines = [];
+  lines.push(s("ellipse",{cx:750, cy:470, rx:610, ry:400, class:"ring"}));
+  B.filter(b => b.id !== "hq").forEach(b => lines.push(s("line",{x1:centre(hq)[0], y1:centre(hq)[1], x2:centre(b)[0], y2:centre(b)[1], class:"road"})));
+  if (NOW && at[NOW.from]){ const from = byId[at[NOW.from]], a = centre(from), col = agent(NOW.from).color;
+    [...new Set(NOW.targets.map(p => at[p]).filter(x => x && x !== from.id))].forEach(bid => { const b = centre(byId[bid]);
+      const mx = (a[0]+b[0])/2, my = (a[1]+b[1])/2, len = Math.hypot(b[0]-a[0], b[1]-a[1]) || 1, bend = Math.min(120, len*0.22);
+      const d = "M"+a[0].toFixed(0)+" "+a[1].toFixed(0)+" Q"+(mx - (b[1]-a[1])/len*bend).toFixed(0)+" "+(my + (b[0]-a[0])/len*bend).toFixed(0)+" "+b[0].toFixed(0)+" "+b[1].toFixed(0);
+      lines.push(s("path",{d, class:"beam-glow", stroke:col}), s("path",{d, class:"beam", stroke:col, style:"color:"+col}));
+      if (!calm()) lines.push(s("circle",{r:9, fill:"#fff", stroke:col, "stroke-width":4}, s("animateMotion",{dur:"1.5s", repeatCount:"indefinite", path:d}))); }); }
+  const trees = [[455,250],[1045,250],[330,470],[1170,470],[540,610],[960,610],[640,150],[860,150],[440,700],[1060,700]];
+
+  const jump = id => { P.tid = id; P.idx = 0; P.done = false; P.paused = false; render(); };
+  const sel = byId[CAMV.sel] || null, waiting = pendingList().length;
+  const speech = h("textarea",{id:"chatInput",rows:"1",placeholder:"Speak to the whole company: your vision, your direction, what you expect…"}); speech.value = CHAT.draft;
+  speech.addEventListener("input", () => { CHAT.draft = speech.value; });
+  const addressAll = async () => { const text = speech.value.trim(); if (!text) return toast("Write what you want to say first");
+    try{ const d = await post("/api/address",{text}); if (d.error) return toast(d.error); CHAT.draft = ""; if (d.comms) C = d.comms; P.tid = null; toast("The whole company heard you"); }
+    catch(e){ toast("Could not send: "+e.message); } render(); };
+  speech.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); addressAll(); } });
+  const running = LIVE.on && ENGINE === "claude";
+  const side = sel ? [
+      h("div",{class:"idea-head",style:"flex-wrap:nowrap;align-items:center"}, h("div",{}, h("div",{class:"small muted"}, sel.kind === "hq" ? "Headquarters" : "Department"), h("h2",{style:"margin:0"}, sel.name)),
+        h("button",{class:"btn",onclick:() => { CAMV.sel = ""; render(); }},"Close")),
+      h("p",{class:"small muted",style:"margin:6px 0 8px"}, here(sel).length+" people in the building now. Click a person to see their work or to chat."),
+      [...new Set([...sel.home, ...here(sel)])].map(p => { const a = agent(p), st = stateOf(p), away = at[p] !== sel.id;
+        return h("button",{class:"who-row",onclick:() => openPerson(p)}, avatar(a, true),
+          h("span",{class:"t"}, p === "founder" ? "You" : nm(a), h("small",{}, a.title), away ? h("em",{}, "away · "+byId[at[p]].name) : st ? h("em",{}, st) : null)); }),
+      h("div",{class:"actions"}, sel.kind === "hq" ? h("button",{class:"btn primary",onclick:() => go("founder")},"Open the Founder Desk")
+        : h("button",{class:"btn primary",onclick:() => { deptSel = sel.id; go("departments"); }},"Open the department"))]
+    : [ LIVE.on ? engineNote() : null,
+      h("div",{class:"small muted"}, M.busy ? "Live chat" : t ? (TYPES[t.type] || t.type)+" · "+t.time+(t.room ? " · "+t.room : "") : live ? "Latest activity" : "Conversations"),
+      h("h2",{style:"margin:2px 0 8px"}, M.busy ? first(agent(M.busy))+" is answering you" : t ? t.title : !LIVE.on ? "The campus is quiet" : "Waiting for the first activity"),
+      t ? h("div",{class:"row",style:"gap:4px;flex-wrap:wrap;margin-bottom:10px"}, t.participants.map(p => { const e = avatar(agent(p), true); e.title = label(agent(p)); return e; })) : null,
+      h("div",{class:"feed",id:"feed",style:"max-height:none"}, shown.slice(-5).map((m,i,arr) => bubble(Object.assign({}, m, {text:short(m.text, 260)}), i === arr.length-1 && !finished)), finished ? outcome(t) : null,
+        !t ? h("p",{class:"muted small",style:"margin:0"}, !LIVE.on ? "Nobody is working. Press Go live and the buildings light up as the teams start." : "Each new meeting, mail and discussion plays here and on the campus as it happens.") : null),
+      !ROOMV.open && live && LIVE.on && t && t.type !== "address" && t.type !== "invite" ? h("div",{style:"margin-top:14px"},
+        h("h3",{}, t.status === "live" ? "Interrupt this meeting" : "Speak to these people"),
+        h("p",{class:"small muted",style:"margin:0 0 6px"}, t.status === "live" ? "They stop and answer you at once." : "The meeting is over, but they answer you."),
+        speakBox(t)) : null,
+      ts.length ? h("div",{style:"margin-top:14px"}, h("div",{class:"small muted",style:"margin-bottom:6px"}, live ? "Today so far" : "Conversations of "+(OFFICE.date || allDays()[0] || "")),
+        h("div",{class:"chips"}, ts.slice(-8).map(x => h("button",{class:"chip"+(t && x.id === t.id ? " cur" : ""),onclick:() => jump(x.id)}, x.time+" · "+short(x.title, 26))))) : null,
+      h("div",{class:"actions"}, h("button",{class:"btn",onclick:() => go("office")},"Open the office floor"), h("button",{class:"btn",onclick:() => go("meetings")},"All meetings"))];
+
+  requestAnimationFrame(() => { if (!CAMV.zm) camFit(); else camApply(); const f = document.getElementById("feed"); if (f) f.scrollTop = f.scrollHeight; });
+  return [
+    h("h1",{}, companyName()+" campus"),
+    h("p",{class:"sub"}, "Your whole company in one place: the headquarters, every department building and the meeting rooms. Lights come on where people work, and a moving beam shows who is talking to whom."),
+    h("div",{class:"campus",id:"campus",
+        onpointerdown:e => { if (e.target.closest(".hud")) return; CAMV.drag = {x:e.clientX, y:e.clientY, rx:CAMV.rx, rz:CAMV.rz}; CAMV.moved = false; e.currentTarget.classList.add("grabbing"); },
+        onwheel:e => { if (e.target.closest(".hud")) return; e.preventDefault(); CAMV.zm = Math.max(.25, Math.min(2, (CAMV.zm || .6) * (e.deltaY < 0 ? 1.08 : .93))); camApply(); }},
+      h("div",{class:"stage"}, h("div",{class:"world"},
+        h("div",{class:"ground"}),
+        s("svg",{id:"beams", viewBox:"0 0 1500 1100"}, lines),
+        h("div",{class:"plaza",style:"left:660px;top:585px"}, companyName().toUpperCase()),
+        trees.map(p => h("div",{class:"bill",style:"left:"+p[0]+"px;top:"+p[1]+"px"}, h("div",{class:"tree"},"🌳"))),
+        B.map(building))),
+      h("div",{class:"hud hud-top"},
+        h("span",{}, LIVE.on ? h("span",{class:"live-dot"}) : null, h("b",{}, LIVE.on ? "LIVE" : "OFFLINE")),
+        h("span",{}, h("b",{}, everyone().length), "people"),
+        h("span",{}, h("b",{}, B.filter(b => b.kind !== "pod").length), "buildings"),
+        h("span",{}, h("b",{}, ts.length), live ? "activities today" : "conversations"),
+        h("button",{onclick:() => go("founder"), style: waiting ? "color:var(--bad)" : ""}, h("b",{}, waiting), "waiting for you")),
+      h("div",{class:"hud hud-ctl"},
+        h("button",{class: CAMV.auto ? "on" : "", title:"Turn the campus slowly", onclick:() => camSet({auto:!CAMV.auto})},"Orbit"),
+        h("button",{title:"Look from above", onclick:() => camSet({rx:26, auto:false})},"Top"),
+        h("button",{title:"Look from street level", onclick:() => camSet({rx:72, auto:false})},"Street"),
+        h("button",{title:"Zoom out", onclick:() => camSet({zm:(CAMV.zm || .6)*.87})},"−"),
+        h("button",{title:"Zoom in", onclick:() => camSet({zm:(CAMV.zm || .6)*1.15})},"+"),
+        h("button",{title:"Back to the first view", onclick:() => { CAMV.rx = 58; CAMV.rz = -32; CAMV.auto = true; camFit(); render(); }},"Reset")),
+      h("div",{class:"hud hud-side"}, side),
+      h("div",{class:"hud hud-hint"},"Drag to turn · scroll to zoom · click a building, a room or a person"),
+      h("div",{class:"hud hud-bar"},
+        LIVE.on ? [speech, h("button",{class:"btn primary",onclick:addressAll},"Address the company"), h("button",{class:"btn",onclick:() => setLive({on:false})},"Go offline")]
+          : [h("span",{style:"flex:1"}, h("b",{},"The company is offline. "), "Nobody is working and nobody can answer."), h("button",{class:"btn primary",onclick:() => setLive({on:true})},"▶  Go live")],
+        running ? null : LIVE.on ? h("span",{class:"small",style:"color:var(--bad)"},"engine off") : null))
+  ];
+}
+
+/* ---------- Profile of one employee ---------- */
+function profile(id){
+  const a = agent(id), boss = a.reportsTo ? agent(a.reportsTo) : (a.id === "ceo" ? FOUNDER : agent("ceo"));
+  const said = dayThreads().flatMap(t => t.messages.filter(m => m.from === id).map(m => ({t, m}))).slice(-4);
+  const reviews = ((S.conduct||{}).reviews||[]).filter(r => r.agent === id).slice(-3).reverse();
+  const close = () => { profileId = null; render(); };
+  return [ h("div",{class:"shade",onclick:close}),
+    h("div",{class:"drawer"},
+      h("div",{class:"row",style:"margin-bottom:12px"}, avatar(a), h("div",{style:"flex:1"}, h("h2",{style:"margin:0"},nm(a)), h("div",{class:"small muted"},a.title+" · "+a.dept+" · reports to "+(boss.id === "founder" ? "you" : nm(boss)))),
+        h("button",{class:"btn",onclick:close},"Close")),
+      h("p",{}, a.role || a.bio),
+      LIVE.statuses[id] ? h("div",{class:"view",style:"border-color:"+a.color}, h("b",{},"Working on now: "), LIVE.statuses[id]) : null,
+      a.focus ? h("div",{class:"chips",style:"margin-bottom:12px"}, a.focus.map(f => h("span",{class:"pill"},f))) : null,
+      h("div",{class:"actions",style:"margin:0 0 16px"},
+        h("button",{class:"btn primary",onclick:()=>{ profileId = null; mailSel = "chat:"+id; CHAT.to = id; go("mail"); }},"Chat with this person"),
+        a.reportsTo ? null : h("button",{class:"btn",onclick:()=>{ profileId = null; deptSel = id; go("departments"); }},"Open department")),
+      team(id).length ? [h("h3",{},"Team"), team(id).map(x => h("div",{class:"log",style:"align-items:center;cursor:pointer",onclick:()=>{profileId=x.id;render();}}, avatar(x,true), h("div",{}, h("b",{},nm(x)+" · "+x.title), h("div",{class:"small muted"},x.role))))] : null,
+      MEM[id] ? [h("h3",{style:"margin-top:14px"},"Memory"),
+        MEM[id].next ? h("div",{class:"view",style:"border-color:var(--accent)"}, h("b",{},"Next: "), MEM[id].next) : null,
+        [...MEM[id].done].reverse().slice(0,6).map(x => h("div",{class:"small",style:"margin:4px 0"}, h("span",{class:"muted"},x.time+" · "), x.text)),
+        MEM[id].talks.length ? h("details",{}, h("summary",{},"What you told this person ("+MEM[id].talks.length+")"), [...MEM[id].talks].reverse().map(x => h("div",{class:"small",style:"margin:4px 0"}, h("span",{class:"muted"},x.time+" · "), x.text))) : null] : null,
+      h("h3",{style:"margin-top:14px"},"Said in the latest meetings"),
+      said.length ? said.map(x => h("div",{class:"view",style:"border-color:"+a.color}, h("div",{class:"small muted"},x.t.time+" · "+x.t.title), short(x.m.text, 260)))
+        : h("p",{class:"small muted"},"Nothing yet. This person speaks in the next working day."),
+      h("h3",{style:"margin-top:14px"},"Feedback from Legal & Conduct"),
+      reviews.length ? reviews.map(r => h("div",{class:"view"}, h("span",{class:"pill "+RATING[r.rating]},(r.rating||"").toUpperCase()), " ", h("span",{class:"small muted"},r.date), h("div",{class:"small"},r.feedback)))
+        : h("p",{class:"small muted"},"No review yet."))];
+}
+const RATING = {good:"approved", note:"hold", warning:"rejected"};
+
+/* ---------- Mail: chats, approvals and the company's internal mail ---------- */
+function approvals(){
+  const decide = async (id,status) => { try{ await post("/api/meeting/decide",{id,status}); toast(status === "pending" ? "Decision undone" : "Saved. The answer comes in the chat."); }catch(e){ toast("Could not save: "+e.message); } render(); };
+  const asked = d => h("div",{style:"flex:1;min-width:0"}, h("div",{class:"small muted"}, "Asked by "+label(agent(d.from||"ceo"))+(d.source ? " · "+d.source : "")), d.text);
+  const pending = pendingList(), decided = M.decisions.filter(d => d.status !== "pending");
+  const cases = S.ideas.filter(i => !decision(i.id).status).length;
+  return { decide,
+    waiting: [ pending.map(d => h("div",{class:"log",style:"align-items:center;flex-wrap:wrap"}, avatar(agent(d.from||"ceo"),true), asked(d),
+        h("button",{class:"btn sel-approved",onclick:()=>decide(d.id,"approved")},"Approve"),
+        h("button",{class:"btn",onclick:()=>decide(d.id,"rejected")},"Reject"))),
+      cases ? h("div",{class:"log",style:"align-items:center"}, h("div",{style:"flex:1"}, cases+" business cases are waiting for your decision."),
+        h("button",{class:"btn",onclick:()=>go("ideas")},"Review business cases")) : null,
+      !pending.length && !cases ? h("p",{class:"muted",style:"margin:0"},"Nothing is waiting for you.") : null ],
+    history: [ Object.entries(F.decisions).map(([id,d]) => { const idea = S.ideas.find(i => i.id === id); return idea ? h("div",{class:"log",style:"align-items:center"},
+        h("div",{style:"flex:1"}, h("div",{class:"small muted"},"Business case"), idea.title, d.note ? h("div",{class:"small muted"},"Your note: "+d.note) : null),
+        h("span",{class:"pill "+d.status}, d.status.toUpperCase())) : null; }),
+      [...decided].reverse().map(d => h("div",{class:"log",style:"align-items:center;flex-wrap:wrap"}, asked(d),
+        h("span",{class:"pill "+d.status}, d.status.toUpperCase()),
+        d.handled ? h("span",{class:"pill"},"DONE") : h("button",{class:"btn",onclick:()=>decide(d.id,"pending")},"Undo"))),
+      !decided.length && !Object.keys(F.decisions).length ? h("p",{class:"muted",style:"margin:0"},"No decisions yet.") : null ] };
+}
+async function sendChat(id, text){
+  if (!text || CHAT.busy) return;
+  CHAT.busy = true; CHAT.draft = ""; CHAT.error = ""; M.messages.push({time:new Date().toISOString(), from:"founder", to:id, text}); render();
+  let reply = "";
+  try{ const d = await post("/api/meeting/say",{text, to:id}); CHAT.error = d.error || "";
+    const last = M.messages[M.messages.length-1]; if (!d.error && last && last.from === id) reply = last.text; }
+  catch(e){ CHAT.error = "Could not reach the dashboard server: "+e.message; }
+  CHAT.busy = false; render();
+  if (VOICE.on) reply ? speak(reply, () => listen()) : listen();
+}
+
+/* ---------- Voice: talk to an employee and hear the answer ---------- */
+const VOICE = {on:false, id:"", lang:"en-IN", rec:null, state:"", heard:""};
+function voiceLine(){
+  const el = document.getElementById("voiceLine"); if (!el) return;
+  el.textContent = VOICE.state === "speaking" ? "Speaking the answer…" : VOICE.state === "listening" ? (VOICE.heard ? "You: "+VOICE.heard : "Listening… speak now") : VOICE.on ? "Waiting for the answer…" : "";
+}
+function speak(text, done){
+  const female = agent(VOICE.id).gender === "female";
+  const synth = window.speechSynthesis; if (!synth) return done();
+  synth.cancel(); VOICE.state = "speaking"; voiceLine();
+  const english = synth.getVoices().filter(v => v.lang.startsWith("en")).sort((x,y) => (y.lang === "en-IN") - (x.lang === "en-IN"));
+  const wanted = female ? /heera|neerja|swara|zira|aria|jenny|sonia|female|woman/i : /ravi|prabhat|david|mark|guy|ryan|male/i;
+  const voice = english.find(v => wanted.test(v.name) && !(female ? false : /female/i.test(v.name))) || english[0];
+  const parts = text.match(/[^.!?\n]+[.!?]*/g) || [text];   // short pieces: long texts stop half-way in some browsers
+  parts.forEach((part, i) => { const u = new SpeechSynthesisUtterance(part.trim()); u.lang = "en-IN"; if (voice) u.voice = voice;
+    if (i === parts.length-1) u.onend = u.onerror = () => { VOICE.state = ""; voiceLine(); if (VOICE.on) done(); };
+    synth.speak(u); });
+}
+function listen(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!VOICE.on) return;
+  if (!SR){ stopVoice(); return toast("Voice needs the Chrome or Edge browser."); }
+  const rec = new SR(); let said = "";
+  rec.lang = VOICE.lang; rec.interimResults = true; rec.continuous = false;
+  rec.onresult = e => { let live = ""; said = "";
+    for (const r of e.results){ if (r.isFinal) said += r[0].transcript; else live += r[0].transcript; }
+    VOICE.heard = (said+" "+live).trim(); voiceLine(); };
+  rec.onerror = e => { if (e.error === "no-speech" || e.error === "aborted") return;
+    stopVoice(); toast(e.error === "not-allowed" || e.error === "service-not-allowed" ? "Allow the microphone for this page, then start voice again." : "Voice stopped: "+e.error); };
+  rec.onend = () => { VOICE.rec = null; if (!VOICE.on) return;
+    const text = said.trim(); VOICE.heard = ""; VOICE.state = ""; voiceLine();
+    if (text) sendChat(VOICE.id, text); else setTimeout(() => { if (VOICE.on && !CHAT.busy && VOICE.state !== "speaking") listen(); }, 300); };
+  VOICE.rec = rec; VOICE.state = "listening"; VOICE.heard = ""; voiceLine();
+  try{ rec.start(); }catch(e){}
+}
+function startVoice(id){ VOICE.on = true; VOICE.id = id; render(); listen(); }
+function stopVoice(){
+  VOICE.on = false; VOICE.state = ""; VOICE.heard = "";
+  if (VOICE.rec){ try{ VOICE.rec.abort(); }catch(e){} VOICE.rec = null; }
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  render();
+}
+
+function chatPane(id){
+  const who = agent(id), mine = M.messages.filter(m => m.to === id || m.from === id);
+  const input = h("textarea",{id:"chatInput",placeholder:"Write to "+first(who)+". Press Enter to send, Shift+Enter for a new line."}); input.value = CHAT.draft;
+  input.addEventListener("input", () => CHAT.draft = input.value);
+  const send = () => sendChat(id, input.value.trim());
+  const talking = VOICE.on && VOICE.id === id;
+  const lang = h("select",{style:"width:auto",title:"The language you speak"}, h("option",{value:"en-IN"},"I speak English"), h("option",{value:"hi-IN"},"I speak Hindi"), h("option",{value:"mr-IN"},"I speak Marathi")); lang.value = VOICE.lang;
+  lang.addEventListener("change", () => { VOICE.lang = lang.value; });
+  setTimeout(voiceLine, 0);
+  input.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); send(); } });
+  const kind = h("select",{style:"width:auto"}, h("option",{value:"discussion"},"Discussion"), h("option",{value:"emergency"},"Emergency meeting"));
+  const topic = h("input",{type:"text",placeholder:"Topic, to start a new meeting",maxlength:"200",style:"flex:1;min-width:140px"});
+  const start = async () => { if (!topic.value.trim()) return toast("Write the topic first");
+    try{ await post("/api/meeting/start",{kind:kind.value, topic:topic.value.trim(), to:id}); }catch(e){ toast("Could not start: "+e.message); } render(); };
+  const writing = CHAT.busy || M.busy === id, error = CHAT.busy ? "" : (CHAT.error || (M.busy ? "" : M.error) || "");
+  const line = m => { if (m.from === "system") return h("div",{class:"view",style:"border-color:var(--"+(m.kind==="emergency"?"bad":"accent")+")"}, h("b",{},m.text));
+    const a = agent(m.from), me = m.from === "founder";
+    return h("div",{class:"msg"+(me?" me":"")}, avatar(a), h("div",{class:"bubble",style:"white-space:pre-wrap"},
+      h("div",{class:"who"}, (me ? (m.auto ? "Your decision" : "You") : nm(a)+(m.from !== id ? " (passing on your message)" : ""))+" · "+new Date(m.time).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})+(m.engine==="backup" ? " · backup model, weaker answers" : m.engine==="local" ? " · local model" : m.engine==="api" ? " · Claude API" : "")), m.text)); };
+  setTimeout(() => { const f = document.getElementById("chat"); if (f) f.scrollTop = f.scrollHeight; }, 0);
+  return [
+    offlineNote(), LIVE.on ? engineNote() : null,
+    h("div",{class:"row",style:"margin-bottom:10px"}, avatar(who), h("div",{style:"flex:1;min-width:0"}, h("h2",{style:"margin:0"},nm(who)), h("div",{class:"small muted"},who.title+" · "+who.dept)),
+      h("button",{class:"btn",onclick:()=>{profileId=id;render();}},"Profile")),
+    h("div",{class:"feed",id:"chat",style:"flex:1;max-height:50vh;margin-bottom:12px"},
+      mine.length ? mine.map(line) : h("p",{class:"muted",style:"margin:0"},"No messages with this person yet. Write the first one."),
+      writing ? h("div",{class:"msg"}, avatar(who), h("div",{class:"bubble",style:"white-space:pre-wrap"},
+        h("div",{class:"who"}, h("span",{class:"live-dot"}), nm(who)+" is writing…"),
+        h("span",{id:"typingNow","data-for":id}, typedText(id)),
+        TYPING[id] ? h("span",{class:"caret"},"▍") : null)) : null,
+      error ? h("div",{class:"view",style:"border-color:var(--bad)"}, h("b",{},"No answer: "), error) : null),
+    input,
+    h("div",{class:"actions"}, h("button",{class:"btn primary",onclick:send}, CHAT.busy ? "Waiting…" : "Send"),
+      h("button",{class:"btn"+(talking?" sel-rejected":""),onclick:()=> talking ? stopVoice() : startVoice(id)}, talking ? "Stop voice talk" : "Start voice talk"),
+      talking ? null : lang,
+      talking ? h("span",{class:"small"}, h("span",{class:"live-dot"}), h("span",{id:"voiceLine"})) : null),
+    h("p",{class:"small muted",style:"margin:6px 0 0"}, talking ? "Just talk. When you stop speaking, your words are sent, the answer is read aloud, and then it listens again."
+      : "Voice talk: speak instead of typing and hear the answer. It needs the Chrome or Edge browser and your microphone."),
+    h("div",{class:"actions"}, kind, topic, h("button",{class:"btn",onclick:start},"Start meeting"))
+  ];
+}
+function vMail(){
+  const ts = dayThreads(), ap = approvals(), waiting = pendingList().length;
+  const talked = [...new Set([...team("founder").map(x => x.id), "ceo", ...M.messages.flatMap(m => [m.from, m.to]).filter(x => x && x !== "founder" && x !== "system")])];
+  if (mailSel.startsWith("chat:") && !talked.includes(mailSel.slice(5))) talked.push(mailSel.slice(5));
+  const pick = sel => { mailSel = sel; if (sel.startsWith("chat:")){ CHAT.to = sel.slice(5); CHAT.draft = ""; CHAT.error = ""; } render(); };
+  const folder = (sel, icon, title, sub, badge) => h("button",{class:"folder"+(mailSel===sel?" on":""),onclick:()=>pick(sel)}, icon,
+    h("div",{class:"t"}, h("div",{style:"font-weight:600"},title), sub ? h("div",{class:"small muted"},sub) : null), badge ? h("span",{class:"badge"},badge) : null);
+  const last = id => { const m = M.messages.filter(x => x.to === id || x.from === id).at(-1); return m ? short(m.text, 40) : "No messages yet"; };
+  const fresh = h("select",{}, h("option",{value:""},"New chat with…"), everyone().map(a => h("option",{value:a.id}, nm(a)+" · "+a.title)));
+  fresh.addEventListener("change", () => { if (fresh.value) pick("chat:"+fresh.value); });
+  const thread = mailSel.startsWith("thread:") ? ts.find(t => t.id === mailSel.slice(7)) : null;
+  let pane;
+  if (mailSel.startsWith("chat:")) pane = chatPane(mailSel.slice(5));
+  else if (thread) pane = [
+    h("div",{class:"small muted"}, (TYPES[thread.type]||thread.type)+" · "+thread.date+" "+thread.time),
+    h("h2",{style:"margin:2px 0 8px"},thread.title),
+    h("div",{class:"row",style:"gap:4px;flex-wrap:wrap;margin-bottom:12px"}, thread.participants.map(p => { const e = avatar(agent(p), true); e.title = label(agent(p)); return e; })),
+    outcome(thread),
+    h("div",{class:"feed",style:"max-height:none;margin-top:12px"}, thread.messages.map(m => bubble(m))) ];
+  else pane = [
+    h("h2",{},"Waiting for your approval"), ap.waiting,
+    h("h2",{style:"margin-top:22px"},"Your decisions"), ap.history ];
+  return [
+    h("h1",{},"Mail"), h("p",{class:"sub"},"Chat with any employee, answer requests for your approval, and read what the teams write to each other."),
+    h("div",{class:"mail"},
+      h("div",{class:"folders"},
+        folder("approvals", h("div",{class:"avatar sm",style:"background:var(--bad)"},"!"), "Approvals", waiting ? waiting+" waiting for you" : "Nothing waiting", waiting),
+        h("div",{class:"nav-group",style:"padding-left:8px"},"Your chats"),
+        talked.map(id => folder("chat:"+id, avatar(agent(id),true), nm(agent(id)), M.busy === id ? "writing…" : (M.messages.some(x => x.to === id || x.from === id) ? last(id) : agent(id).title))),
+        h("div",{style:"padding:6px 4px"}, fresh),
+        h("div",{class:"nav-group",style:"padding-left:8px"}, ts.length ? "Company mail · "+ts[0].date : "Company mail"),
+        ts.length ? ts.map(t => folder("thread:"+t.id, avatar(agent(t.messages[0] ? t.messages[0].from : "ceo"),true), t.title, t.time+" · "+(TYPES[t.type]||t.type)))
+          : h("p",{class:"small muted",style:"padding:0 8px"},"No internal mail yet.")),
+      h("div",{class:"pane"}, pane))
+  ];
+}
+
+/* ---------- Founder Desk ---------- */
+function vFounder(){
+  const ap = approvals(), ceo = agent("ceo");
+  const name = h("input",{type:"text",placeholder:"Company name (you can change it any time)",maxlength:"80"}); name.value = F.companyName;
+  const me = h("input",{type:"text",placeholder:"For example: your first name",maxlength:"40"}); me.value = F.founderName || "";
+  return [
+    h("h1",{},"Founder Desk"), h("p",{class:"sub"},"Every decision of the company is made here, by you. Nothing is done unless you approve it."),
+    LIVE.on ? engineNote() : offlineNote(),
+    h("div",{class:"card"}, h("h2",{},"Waiting for your decision"), ap.waiting),
+    h("div",{class:"card"}, h("h2",{},"Talk to your company"),
+      h("p",{style:"margin:0 0 10px"},"Your decisions go to the CEO at once, and the CEO answers in the chat. You can also write to any employee."),
+      h("div",{class:"actions",style:"margin:0"}, h("button",{class:"btn primary",onclick:()=>{ mailSel="chat:ceo"; CHAT.to="ceo"; go("mail"); }},"Chat with the CEO"),
+        team("founder").map(x => h("button",{class:"btn",onclick:()=>{ mailSel="chat:"+x.id; CHAT.to=x.id; go("mail"); }},"Talk to your assistant")),
+        h("button",{class:"btn",onclick:()=>go("office")},"See the office"))),
+    h("div",{class:"card"}, h("h2",{},"Your decisions"), ap.history,
+      h("p",{class:"small muted",style:"margin:10px 0 0"},"While you are live, the CEO answers each decision at once and the teams change their plans. Rejected items are dropped.")),
+    S.ceoMemo && S.ceoMemo.headline ? h("div",{class:"card memo"}, h("div",{class:"row",style:"margin-bottom:10px"}, avatar(ceo),
+        h("div",{}, h("div",{class:"small muted"},"Memo from "+nm(ceo)), h("h2",{style:"margin:0"},S.ceoMemo.headline))),
+      S.ceoMemo.body.map(p => h("p",{},p))) : null,
+    S.questionsForFounder.length ? h("div",{class:"card"}, h("h2",{},"Open questions for you"), h("ol",{style:"margin:0;padding-left:20px"}, S.questionsForFounder.map(q=>h("li",{},q)))) : null,
+    F.messages.length ? h("div",{class:"card"}, h("h2",{},"Earlier instructions"),
+      [...F.messages].reverse().map(m => h("div",{class:"log"},
+        h("div",{class:"small muted",style:"width:150px;flex-shrink:0"}, new Date(m.time).toLocaleString(), h("br"), "To: "+(m.to==="board"?"Whole board":agent(m.to).title)),
+        h("div",{style:"flex:1;white-space:pre-wrap"}, m.text, m.reply ? h("div",{class:"view"}, h("b",{},"Response: "), m.reply) : null),
+        h("span",{class:"pill "+(m.answered?"approved":"hold")}, m.answered?"answered":"waiting")))) : null,
+    h("div",{class:"card"}, h("h2",{},"Names"), h("div",{class:"fgrid"},
+        h("label",{class:"fld"}, h("span",{},"Your name (how the employees address you)"), me),
+        h("label",{class:"fld"}, h("span",{},"Company name"), name)),
+      h("button",{class:"btn primary",onclick:()=>{F.founderName=me.value.trim();F.companyName=name.value.trim();save("Names saved");}},"Save"))
+  ];
+}
+
+/* ---------- Meetings ---------- */
+function vMeetings(){
+  const days = [...new Set(C.threads.map(t => t.date))].sort().reverse();
+  return [
+    h("h1",{},"Meetings"), h("p",{class:"sub"},"Every meeting, review, mail and presentation, with its summary, actions and full conversation."),
+    days.length ? days.map(d => h("div",{}, h("h2",{style:"margin-top:18px"},d),
+      C.threads.filter(t => t.date === d).map(t => h("div",{class:"card"},
+        h("div",{class:"idea-head"}, h("div",{}, h("div",{class:"small muted"}, t.time+" · "+(TYPES[t.type]||t.type)), h("h3",{style:"margin:0"},t.title)),
+          h("div",{class:"row",style:"gap:4px;flex-wrap:wrap"}, t.participants.map(p => { const e = avatar(agent(p), true); e.title = label(agent(p)); return e; }))),
+        outcome(t),
+        h("details",{}, h("summary",{},"Full conversation ("+t.messages.length+" messages)"), h("div",{class:"feed",style:"margin-top:10px;max-height:none"}, t.messages.map(m => bubble(m))))))))
+      : h("div",{class:"card muted"},"No meetings recorded yet.")
+  ];
+}
+
+/* ---------- Business cases ---------- */
+function scoreBars(idea){
+  return Object.entries(S.scoreLabels).map(([k,label]) =>
+    h("div",{class:"score-row"}, h("span",{},label),
+      h("div",{class:"bar"}, h("i",{style:"width:"+(idea.scores[k]*10)+"%"})), h("b",{},idea.scores[k])));
+}
+const total = idea => Object.keys(S.scoreLabels).reduce((sum,k)=>sum+idea.scores[k],0);
+function ideaCard(idea){
+  const d = decision(idea.id);
+  const note = h("textarea",{placeholder:"Your comment or instruction for the board (optional)"}); note.value = d.note || "";
+  const decide = status => { F.decisions[idea.id] = {status, note: note.value.trim(), time: new Date().toISOString()}; save("Decision saved. The CEO answers in Mail."); };
+  const btn = (status,label) => h("button",{class:"btn"+(d.status===status?" sel-"+status:""),onclick:()=>decide(status)},label);
+  return h("div",{class:"card"},
+    h("div",{class:"idea-head"},
+      h("div",{}, h("div",{class:"rank"},"CEO RANK "+idea.rank+" · SCORE "+total(idea)+"/50"), h("h2",{style:"margin:2px 0"},idea.title), h("div",{class:"muted"},idea.tagline)),
+      h("span",{class:"pill "+(d.status||"")}, d.status ? d.status.toUpperCase() : "AWAITING YOUR DECISION")),
+    h("div",{class:"facts"},
+      h("div",{class:"fact"},h("b",{},"Type"),idea.type), h("div",{class:"fact"},h("b",{},"Revenue"),idea.revenue),
+      h("div",{class:"fact"},h("b",{},"Startup cost"),idea.startupCost), h("div",{class:"fact"},h("b",{},"Time to first revenue"),idea.timeToRevenue)),
+    h("div",{class:"grid g2"},
+      h("div",{}, h("h3",{},"Customer"), h("p",{class:"small",style:"margin:0 0 10px"},idea.customer), h("h3",{},"What we sell"), h("p",{class:"small",style:"margin:0"},idea.offer)),
+      h("div",{}, h("h3",{},"Board scores (out of 10)"), scoreBars(idea))),
+    h("div",{class:"view",style:"border-color:"+agent("ceo").color}, h("b",{},"CEO verdict: "), idea.ceoVerdict),
+    h("details",{}, h("summary",{},"What each department says"),
+      Object.entries(idea.views).map(([id,text]) => h("div",{class:"view",style:"border-color:"+agent(id).color}, h("b",{},agent(id).dept+": "), text))),
+    idea.roadmap.length ? h("details",{}, h("summary",{},"Roadmap"),
+      h("div",{class:"roadmap"}, idea.roadmap.map(p => h("div",{class:"fact"}, h("b",{},p.phase), h("ul",{},p.items.map(i=>h("li",{},i))))))) : null,
+    h("div",{style:"margin-top:14px"}, note),
+    h("div",{class:"actions"}, btn("approved","Approve"), btn("hold","Hold"), btn("rejected","Reject"),
+      d.status ? h("button",{class:"btn",onclick:()=>{delete F.decisions[idea.id];save("Decision cleared");}},"Clear") : null));
+}
+function vIdeas(){
+  const ideas = [...S.ideas].sort((a,b)=>a.rank-b.rank), keys = Object.keys(S.scoreLabels);
+  return [
+    h("h1",{},"Business Cases"), h("p",{class:"sub"},"Proposed by the board. Approve, hold or reject each one. Scores are the board's judgment, not measured data."),
+    !ideas.length ? null : h("div",{class:"card",style:"overflow-x:auto"}, h("h2",{},"Comparison"),
+      h("table",{}, h("thead",{},h("tr",{}, h("th",{},"#"), h("th",{},"Idea"), keys.map(k=>h("th",{},S.scoreLabels[k])), h("th",{},"Total"), h("th",{},"First revenue"), h("th",{},"Your decision"))),
+        h("tbody",{}, ideas.map(i => h("tr",{}, h("td",{},i.rank), h("td",{},h("b",{},i.title)), keys.map(k=>h("td",{class:"num"},i.scores[k])),
+          h("td",{class:"num"},h("b",{},total(i))), h("td",{},i.timeToRevenue),
+          h("td",{}, h("span",{class:"pill "+(decision(i.id).status||"")}, decision(i.id).status || "waiting"))))))),
+    ideas.length ? ideas.map(ideaCard) : h("div",{class:"card muted"},"No business cases yet. This is a fresh start: tell the company what you want, and ask the CEO to prepare business cases when you are ready.")
+  ];
+}
+
+/* ---------- Organisation pages ---------- */
+function vDepartments(){
+  const a = agent(deptSel), ideas = [...S.ideas].sort((x,y)=>x.rank-y.rank);
+  return [
+    h("h1",{},"Departments"), h("p",{class:"sub"},"Each department, its head, its team and its position on every business case."),
+    h("div",{class:"actions",style:"margin:0 0 16px"}, S.agents.map(x => h("button",{class:"btn"+(x.id===deptSel?" primary":""),onclick:()=>{deptSel=x.id;render();}},x.dept))),
+    h("div",{class:"card"}, h("div",{class:"row"}, avatar(a), h("div",{style:"flex:1"}, h("h2",{style:"margin:0"},nm(a)), h("div",{class:"small muted"},a.title+" · "+a.dept+" · "+a.experience+" in digital businesses")),
+        h("button",{class:"btn",onclick:()=>{ mailSel="chat:"+a.id; CHAT.to=a.id; go("mail"); }},"Chat")),
+      h("p",{},a.bio), h("div",{class:"actions",style:"margin-top:0"}, a.focus.map(f => h("span",{class:"pill"},f)))),
+    a.id !== "ceo" ? h("div",{class:"card"}, h("h2",{},"Team ("+team(a.id).length+")"),
+      team(a.id).length ? team(a.id).map(x => h("div",{class:"log",style:"align-items:center;cursor:pointer",onclick:()=>{profileId=x.id;render();}}, avatar(x), h("div",{}, h("b",{},nm(x)+" · "+x.title), h("div",{class:"small"},x.role))))
+        : h("p",{class:"muted",style:"margin:0"},"No team members yet.")) : null,
+    !ideas.length ? null : h("div",{class:"card"}, h("h2",{},a.id==="ceo" ? "Verdict on each business case" : "Position on each business case"),
+      ideas.map(i => h("div",{class:"view",style:"border-color:"+a.color}, h("b",{},i.rank+". "+i.title), h("div",{class:"small"}, a.id==="ceo" ? i.ceoVerdict : (i.views[a.id] || "No comment yet."))))),
+    h("div",{class:"card"}, h("h2",{},"Recent activity"),
+      S.activity.filter(l=>l.agent===a.id).reverse().map(l => h("div",{class:"log"}, h("div",{class:"small muted",style:"width:90px;flex-shrink:0"},l.time), h("div",{},l.text))))
+  ];
+}
+function agentDraft(id){
+  if (id === "new") return {id:"", engine:"", style:"friendly and direct", voice:"", pitch:"", rate:"", name:"", gender:"male", shownPrompt:"", title:"", short:"", reportsTo:"ceo", dept:"", color:"#3b82f6", experience:"", about:"", focus:"", systemPrompt:"", temperature:0.4, topK:40, topP:0.9};
+  const a = agent(id);
+  return {id:a.id, engine:a.engine || "", style:a.style || "", voice:a.voice || "", pitch:a.pitch || "", rate:a.rate || "", name:a.name || "", gender:a.gender || "male", shownPrompt:a.systemPrompt || PROMPTS[a.id] || "", title:a.title, short:a.short, reportsTo:a.reportsTo || "ceo", dept:a.dept, color:a.color, experience:a.experience || "", about:a.role || a.bio || "",
+    focus:(a.focus || []).join(", "), systemPrompt:a.systemPrompt || PROMPTS[a.id] || "", temperature:a.temperature ?? 0.4, topK:a.topK ?? 40, topP:a.topP ?? 0.9};
+}
+function vAgents(){
+  if (AG.sel !== "new" && !everyone().some(a => a.id === AG.sel)){ AG.sel = "ceo"; AG.draft = null; }
+  if (!AG.draft) AG.draft = agentDraft(AG.sel);
+  const d = AG.draft, isNew = AG.sel === "new", cur = isNew ? null : agent(AG.sel);
+  const isStaff = isNew ? d.reportsTo !== "ceo" : !!cur.reportsTo, heads = S.agents.filter(a => a.id !== "ceo");
+  const pick = id => { AG.sel = id; AG.draft = null; AG.confirm = false; render(); };
+  const bind = (e, key, redraw) => { e.value = d[key]; e.addEventListener(redraw ? "change" : "input", () => { d[key] = e.value; if (redraw) render(); }); return e; };
+  const fld = (name, el, hint) => h("label",{class:"fld"}, h("span",{},name), el, hint ? h("span",{class:"small muted"},hint) : null);
+  const text = (key, ph, max) => bind(h("input",{type:"text",placeholder:ph||"",maxlength:max||60}), key);
+  const num = (key, min, max, step) => bind(h("input",{type:"number",min,max,step}), key);
+  const own = !isNew && cur.reportsTo === "founder";   // the founder's own assistant
+  const boss = own ? h("select",{}, h("option",{value:"founder"},"Founder")) : h("select",{}, isNew || !isStaff ? h("option",{value:"ceo"}, isNew ? "CEO (this makes a new department head)" : (cur.id === "ceo" ? "Founder" : "CEO")) : null,
+    isNew || isStaff ? heads.map(a => h("option",{value:a.id}, a.title+" ("+a.dept+")")) : null);
+  bind(boss, "reportsTo", true); if (own || (!isNew && !isStaff)) boss.disabled = true;
+  const save = async () => {
+    try{ const r = await post("/api/agents/save", d); if (r.error) return toast(r.error);
+      AG.sel = r.id; AG.draft = null; toast(isNew ? "Agent added to the company" : "Agent saved"); }
+    catch(e){ toast("Could not save: "+e.message); }
+    render();
+  };
+  const remove = async () => {
+    if (!AG.confirm){ AG.confirm = true; return render(); }
+    try{ const r = await post("/api/agents/delete", {id:cur.id}); AG.confirm = false; if (r.error) { toast(r.error); return render(); }
+      AG.sel = "ceo"; AG.draft = null; toast("Agent deleted"); }
+    catch(e){ toast("Could not delete: "+e.message); }
+    render();
+  };
+  const item = (a, indent) => h("button",{class:"folder"+(AG.sel===a.id?" on":""),style:indent?"padding-left:26px":"",onclick:()=>pick(a.id)}, avatar(a,true),
+    h("div",{class:"t"}, h("div",{style:"font-weight:600"},nm(a)), h("div",{class:"small muted"}, a.title+(a.systemPrompt ? " · custom prompt" : "")+((a.engine||"claude") === "claude" ? "" : " · "+(a.engine.startsWith("ollama:") ? "local "+a.engine.slice(7) : a.engine.startsWith("api:") ? "API "+a.engine.slice(4) : a.engine.slice(7))))));
+  const custom = cur && cur.systemPrompt;
+  return [
+    h("h1",{},"Agent Management"), h("p",{class:"sub"},"Every agent of the company: who they are, the system prompt they work with and their model settings. Add an agent to the hierarchy or delete one."),
+    h("div",{class:"card",style:"padding:12px 16px"}, h("div",{class:"row",style:"flex-wrap:wrap;align-items:flex-start"},
+      h("div",{style:"flex:1;min-width:260px"}, h("b",{},"Claude API key (optional)"),
+        h("div",{class:"small muted"},"Add a key from console.anthropic.com to use any Claude model through the API, for each employee or for the live work. API use is billed to that key, separately from your Claude plan. The key stays on this PC only, outside the OneDrive folder, and is never shown again."),
+        APIK.set ? h("div",{class:"small",style:"margin-top:6px"}, h("span",{class:"pill approved"},"SAVED"), " "+APIK.masked+" · "+APIK.models+" models available"+(APIK.error ? " · "+APIK.error : "")) : null),
+      (() => { const key = h("input",{type:"password",placeholder:APIK.set ? "Paste a new key to replace it" : "sk-ant-…",autocomplete:"off",style:"width:260px"});
+        const saveKey = async v => { try{ const d = await post("/api/apikey",{key:v}); if (d.error) toast(d.error); else { toast(v ? "API key saved. "+(d.api.models||0)+" models found." : "API key removed"); if (d.api) APIK = d.api; await load(); } }
+          catch(e){ toast("Could not save: "+e.message); } render(); };
+        return h("div",{class:"actions",style:"margin:0"}, key, h("button",{class:"btn primary",onclick:()=>{ if (key.value.trim()) saveKey(key.value.trim()); else toast("Paste the key first"); }},"Save key"),
+          APIK.set ? h("button",{class:"btn",onclick:()=>saveKey("")},"Remove") : null); })())),
+    h("div",{class:"card",style:"padding:12px 16px"}, h("div",{class:"row",style:"flex-wrap:wrap"},
+      h("div",{style:"flex:1;min-width:260px"}, h("b",{},"AI model for the company's live work"),
+        h("div",{class:"small muted"},"Used for meetings, the teams' work and their reactions. Haiku is faster and uses less of your Claude plan; Opus is the strongest.")),
+      (() => { const sel = h("select",{style:"width:auto"}, MODELS.filter(m => !m.id.startsWith("ollama:")).map(m => h("option",{value:m.id}, m.label)));
+        sel.value = (S.settings || {}).liveModel || "claude";
+        sel.addEventListener("change", async () => { try{ await post("/api/settings",{liveModel:sel.value}); toast("Saved"); }catch(e){ toast("Could not save: "+e.message); } render(); });
+        return sel; })())),
+    h("div",{class:"stats"}, h("div",{class:"stat"}, h("b",{},everyone().length), "people"),
+      h("div",{class:"stat"}, h("b",{},everyone().filter(a => a.gender === "female").length), "women · "+Math.round(100*everyone().filter(a => a.gender === "female").length/everyone().length)+"%"),
+      h("div",{class:"stat"}, h("b",{},everyone().filter(a => a.gender !== "female").length), "men · "+Math.round(100*everyone().filter(a => a.gender !== "female").length/everyone().length)+"%")),
+    h("div",{class:"mail"},
+      h("div",{class:"folders"},
+        h("button",{class:"btn primary",style:"width:100%;margin-bottom:8px",onclick:()=>pick("new")},"+ Add agent"),
+        team("founder").map(x => item(x)), item(agent("ceo")), heads.map(a => [item(a), team(a.id).map(x => item(x, true))])),
+      h("div",{class:"pane"},
+        h("div",{class:"row",style:"margin-bottom:14px"}, isNew ? h("div",{class:"avatar",style:"background:"+d.color},"NEW") : avatar(cur),
+          h("div",{style:"flex:1"}, h("h2",{style:"margin:0"}, isNew ? "New agent" : nm(cur)), h("div",{class:"small muted"}, isNew ? "Fill in the details and save" : cur.title+" · "+cur.dept+" · id "+cur.id))),
+        h("div",{class:"fgrid"},
+          fld("Name", text("name","for example Neha Kulkarni", 40)),
+          fld("Gender", bind(h("select",{}, h("option",{value:"female"},"Female"), h("option",{value:"male"},"Male")), "gender")),
+          fld("Job title", text("title","for example Sales Executive")),
+          fld("Short code", text("short","3 letters", 4), "Shown on the desk"),
+          fld("Reports to", boss),
+          fld("Experience", text("experience","for example 12 years", 40))),
+        isStaff ? null : h("div",{class:"fgrid"},
+          fld("Department name", text("dept","for example Research", 40)),
+          fld("Department colour", bind(h("input",{type:"color"}), "color")),
+          fld("Focus areas", text("focus","comma separated", 200))),
+        fld(isStaff ? "Role: what this agent does" : "Profile: background and responsibility", bind(h("textarea",{maxlength:600}), "about")),
+        h("h3",{style:"margin-top:6px"},"System prompt ", h("span",{class:"pill "+(custom?"hold":"")}, custom ? "CUSTOM" : "DEFAULT")),
+        fld("", bind(h("textarea",{style:"min-height:190px;font-family:Consolas,monospace;font-size:13px",maxlength:6000,
+          placeholder:"Leave empty for a new agent: the prompt is then written automatically from the details above."}), "systemPrompt"),
+          "This is what the agent is told before every chat. The default is built from the details above; if you change the text here it becomes a custom prompt."),
+        !isNew ? h("div",{class:"actions",style:"margin:-4px 0 12px"}, h("button",{class:"btn",onclick:()=>{ d.systemPrompt = ""; save(); }},"Reset prompt to default")) : null,
+        h("details",{style:"margin-bottom:14px"}, h("summary",{},"Company rules added to every prompt (fixed)"), h("p",{class:"small",style:"white-space:pre-wrap"},RULES)),
+        h("h3",{},"Voice and way of speaking"),
+        fld("Way of speaking", bind(h("textarea",{maxlength:300,style:"min-height:52px",placeholder:"for example: calm and decisive; uses first names"}), "style"),
+          "How this person talks in chats and meetings. Every person should sound different."),
+        h("div",{class:"fgrid"},
+          fld("Voice", bind(h("select",{}, h("option",{value:""},"Automatic (by gender and role)"),
+            (window.speechSynthesis ? speechSynthesis.getVoices() : []).filter(v => v.lang.startsWith("en")).map(v => h("option",{value:v.name}, v.name+" ("+v.lang+")"))), "voice"),
+            window.speechSynthesis && speechSynthesis.getVoices().length ? "The voices installed on this PC." : "Open the dashboard in Chrome or Edge to see the voices."),
+          fld("Voice pitch", num("pitch",0.5,1.5,0.05), "Empty = automatic. 1 = normal"),
+          fld("Speaking pace", num("rate",0.6,1.5,0.05), "Empty = automatic. 1 = normal")),
+        !isNew ? h("div",{class:"actions",style:"margin:-4px 0 12px"}, h("button",{class:"btn",onclick:()=>{
+          if (!window.speechSynthesis || !speechSynthesis.getVoices().length) return toast("No voices here. Open the dashboard in Chrome or Edge.");
+          const was = {voice:cur.voice, pitch:cur.pitch, rate:cur.rate}; Object.assign(cur, {voice:d.voice, pitch:Number(d.pitch)||0, rate:Number(d.rate)||0});
+          const u = new SpeechSynthesisUtterance("Hello, I am "+(d.name || cur.title)+", "+d.title+". This is how I sound in our meetings."), vs = voiceSettings(cur.id);
+          u.voice = voiceFor(cur.id); u.pitch = vs.pitch; u.rate = vs.rate; Object.assign(cur, was); speechSynthesis.cancel(); speechSynthesis.speak(u); }},"🔊 Hear this voice")) : null,
+        h("h3",{},"Model settings"),
+        fld("AI model", bind(h("select",{}, h("option",{value:""},"Company default (Sonnet for the CEO and heads, Haiku for teams)"), MODELS.map(m => h("option",{value:m.id}, m.label))), "engine"),
+          "Claude Code uses your Claude plan. Claude API models use your API key (billed per use). A local model runs free on this PC but is much weaker."),
+        h("div",{class:"fgrid"},
+          fld("Temperature", num("temperature",0,2,0.1), "0 = strict, 1 = creative"),
+          fld("Top K", num("topK",1,200,1), "How many words it may choose from"),
+          fld("Top P", num("topP",0,1,0.05), "0 to 1")),
+        h("p",{class:"small muted",style:"margin:0"},"Temperature, Top K and Top P apply to local models only. Claude Code does not allow changing them, so with Claude the AI model and the system prompt apply."),
+        h("div",{class:"actions"}, h("button",{class:"btn primary",onclick:save}, isNew ? "Add agent" : "Save changes"),
+          isNew ? h("button",{class:"btn",onclick:()=>pick("ceo")},"Cancel") : null,
+          !isNew && cur.id !== "ceo" ? h("button",{class:"btn"+(AG.confirm?" sel-rejected":""),onclick:remove}, AG.confirm ? "Click again to delete "+nm(cur) : "Delete agent") : null,
+          !isNew ? h("button",{class:"btn",onclick:()=>{ mailSel="chat:"+cur.id; CHAT.to=cur.id; go("mail"); }},"Chat") : null)))
+  ];
+}
+/* ---------- Control Room: watch everyone, like CCTV ---------- */
+const KIND = {milestone:"Milestone", tell:"Passed to the team", room:"Room booking", chat:"Chat", relay:"Passed on", work:"Work", web:"Web", file:"File", document:"Document", project:"Project", role:"Role change",
+  deliverable:"Deliverable", request:"Request", decision:"Your decision", address:"Your address", system:"System", error:"Problem"};
+const KCOLOR = {web:"#1971c2", file:"#845ef7", document:"#2f9e44", deliverable:"#e8590c", request:"#d6336c", error:"#d6336c", work:"#0c8599", system:"#667085"};
+function vControl(){
+  const day = new Date().toDateString(), todays = EVENTS.filter(e => new Date(e.time).toDateString() === day);
+  const count = (id, kinds) => todays.filter(e => e.agent === id && kinds.includes(e.kind)).length;
+  const lastOf = (id, kinds) => [...EVENTS].reverse().find(e => e.agent === id && kinds.includes(e.kind));
+  const clock = e => new Date(e.time).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
+  const cam = a => { const doing = LIVE.statuses[a.id] || "", busy = M.busy === a.id, last = lastOf(a.id, Object.keys(KIND)), touch = lastOf(a.id, ["web","file","document"]);
+    return h("button",{class:"cam"+(camSel === a.id ? " on" : ""),style:"--c:"+a.color,onclick:()=>{ camSel = camSel === a.id ? "" : a.id; render(); }},
+      h("div",{class:"row",style:"gap:8px"}, avatar(a,true), h("div",{style:"flex:1;min-width:0;text-align:left"}, h("div",{style:"font-weight:600"},nm(a)), h("div",{class:"small muted"},a.title)),
+        h("span",{class:"dot",style:"background:"+(busy ? "var(--bad)" : LIVE.on && doing ? "var(--ok)" : "var(--line)")})),
+      h("div",{class:"cam-now"}, busy ? "Answering you now…" : doing || (LIVE.on ? "At the desk, no task yet" : "Offline")),
+      MEM[a.id] && MEM[a.id].next ? h("div",{class:"small muted"},"Next: "+short(MEM[a.id].next, 70)) : null,
+      touch ? h("div",{class:"small",style:"color:"+(KCOLOR[touch.kind]||"inherit")}, KIND[touch.kind]+": "+short(touch.detail || touch.text, 46)) : null,
+      h("div",{class:"cam-nums"}, h("span",{}, h("b",{},count(a.id,["work"])), " work"), h("span",{}, h("b",{},count(a.id,["chat","relay"])), " chats"),
+        h("span",{}, h("b",{},count(a.id,["web"])), " web"), h("span",{}, h("b",{},count(a.id,["document","deliverable"])), " docs")),
+      last ? h("div",{class:"small muted"},"Last seen "+clock(last)) : null); };
+  const feed = [...EVENTS].reverse().filter(e => !camSel || e.agent === camSel).slice(0, 150);
+  const openLink = e => e.kind === "web" && /^https:\/\//.test(e.detail) ? h("a",{href:e.detail,target:"_blank",rel:"noopener"},"open page") : null;
+  return [
+    h("h1",{},"Control Room"), h("p",{class:"sub"},"Watch everyone, like CCTV: what each person is doing now, what they open on the web or in the files, how much they did today, and every message as it happens. Click a person to see only their activity."),
+    LIVE.on ? engineNote() : offlineNote(),
+    h("div",{class:"stats"},
+      h("div",{class:"stat"}, h("b",{},todays.filter(e => e.kind === "work").length), "pieces of work today"),
+      h("div",{class:"stat"}, h("b",{},todays.filter(e => e.kind === "web").length), "web pages read"),
+      h("div",{class:"stat"}, h("b",{},todays.filter(e => e.kind === "file").length), "files read"),
+      h("div",{class:"stat"}, h("b",{},todays.filter(e => e.kind === "document").length), "documents written"),
+      h("div",{class:"stat"}, h("b",{},todays.filter(e => e.kind === "chat" && e.agent !== "founder").length), "answers to you")),
+    h("div",{class:"office"},
+      h("div",{class:"cams"}, everyone().map(cam)),
+      h("div",{class:"now"}, h("div",{class:"card"},
+        h("div",{class:"idea-head"}, h("h3",{}, LIVE.on ? h("span",{class:"live-dot"}) : null, camSel ? "Activity of "+nm(agent(camSel)) : "Everything, newest first"),
+          camSel ? h("button",{class:"btn",onclick:()=>{camSel="";render();}},"Show everyone") : null),
+        h("div",{class:"feed",style:"max-height:72vh;gap:6px"}, feed.length ? feed.map(e => { const a = agent(e.agent);
+            return h("div",{class:"msg"}, avatar(a,true), h("div",{class:"bubble",style:"font-size:13px"},
+              h("div",{class:"who"}, clock(e)+" · "+(e.agent === "founder" ? "You" : nm(a))+" · ", h("b",{style:"color:"+(KCOLOR[e.kind]||"inherit")},KIND[e.kind]||e.kind), e.detail === "backup" ? " · backup model" : ""),
+              short(e.text, 320), " ", openLink(e))); })
+          : h("p",{class:"muted",style:"margin:0"},"Nothing recorded yet. Go live and everything the company does appears here.")))))
+  ];
+}
+
+/* ---------- Deliverables: what the company prepared for the founder to do outside ---------- */
+/* ---------- Screens: what is on each employee's computer ---------- */
+const DOCS = {};      // text of documents already fetched, by path
+let screenSel = "";
+function docText(path){
+  if (DOCS[path] === undefined){ DOCS[path] = "Opening…";
+    fetch("/files/"+path.split("/").map(encodeURIComponent).join("/")).then(r => r.ok ? r.text() : "The file is not there any more.")
+      .then(x => { DOCS[path] = x; render(); }).catch(() => { DOCS[path] = "Could not open the file."; render(); }); }
+  return DOCS[path];
+}
+// Everything a person really produced or opened, newest first: web pages, documents, files, slides, mail, meetings.
+function screenItems(id){
+  const items = EVENTS.filter(e => e.agent === id && ["web","document","file","tell","deliverable","milestone","room","work","chat"].includes(e.kind))
+    .map(e => ({time:e.time, kind:e.kind, text:e.text, detail:e.detail}));
+  C.threads.forEach(th => (th.slides || []).forEach(sl => { if (sl.by === id) items.push({time:th.date+"T"+th.time+":00", kind:"slides", text:th.title, slide:sl, room:th.room}); }));
+  return items.sort((a,b) => new Date(b.time) - new Date(a.time));
+}
+function screenBody(it, big){
+  const lines = n => (x => x.split("\n").slice(0, n).join("\n"))(docText(it.detail));
+  if (it.kind === "web") return [h("div",{class:"app-bar"}, "🌐", h("span",{class:"url"}, it.detail || "")),
+    h("div",{class:"app-body"}, h("div",{class:"small",style:"color:#9aa5c8"},"Reading a public web page"), h("div",{style:"font-weight:600;margin:4px 0"}, (it.detail || "").split("/")[2] || "web page"),
+      big ? h("a",{href:it.detail,target:"_blank",rel:"noopener"},"Open this page yourself") : null)];
+  if (it.kind === "document" && it.detail) return [h("div",{class:"app-bar"}, "📝", h("span",{class:"url"}, it.detail.split("/").pop())),
+    h("pre",{class:"app-body doc"}, big ? docText(it.detail) : lines(9))];
+  if (it.kind === "file") return [h("div",{class:"app-bar"}, "📂", h("span",{class:"url"}, it.detail)), h("pre",{class:"app-body doc"}, big ? docText(it.detail) : lines(9))];
+  if (it.kind === "slides") return [h("div",{class:"app-bar"}, "📊", h("span",{class:"url"}, "Slides · "+it.text)),
+    h("div",{class:"app-body",style:"background:#0b1020"}, h("div",{style:"font-weight:700;color:#fff;margin-bottom:4px"}, it.slide.title),
+      h("ul",{style:"margin:0;padding-left:16px;font-size:12px"}, it.slide.bullets.slice(0, big ? 9 : 3).map(b => h("li",{},b))),
+      big && it.slide.chart ? chartSvg(it.slide.chart) : it.slide.chart ? h("div",{class:"small",style:"color:#00E5C0"},"📈 chart: "+(it.slide.chart.unit || "")) : null)];
+  if (it.kind === "tell" || it.kind === "chat") return [h("div",{class:"app-bar"}, "✉️", h("span",{class:"url"}, it.kind === "tell" ? "Mail to a colleague" : "Chat")),
+    h("div",{class:"app-body"}, short(it.text, big ? 2000 : 220))];
+  if (it.kind === "room" || it.kind === "work") return [h("div",{class:"app-bar"}, "📅", h("span",{class:"url"}, it.kind === "room" ? "Calendar" : "Meeting")), h("div",{class:"app-body"}, short(it.text, big ? 2000 : 200))];
+  return [h("div",{class:"app-bar"}, it.kind === "milestone" ? "🎉" : "📌", h("span",{class:"url"}, KIND[it.kind] || it.kind)), h("div",{class:"app-body"}, short(it.text, big ? 2000 : 200))];
+}
+function monitor(a, big){
+  const items = screenItems(a.id), it = items[big ? Math.min(SCRN.pick, items.length-1) : 0], doing = LIVE.statuses[a.id];
+  return h("div",{class:"monitor"+(big ? " big" : ""), style:"--c:"+a.color, onclick: big ? null : () => { screenSel = a.id; SCRN.pick = 0; render(); }},
+    h("div",{class:"screen"}, LIVE.on && it ? screenBody(it, big)
+      : h("div",{class:"wallpaper"}, h("div",{style:"font-size:26px"}, LIVE.on ? "💻" : "🌙"), h("div",{},LIVE.on ? (doing || "At the desk") : "Offline · screen locked"))),
+    h("div",{class:"stand"}),
+    h("div",{class:"row",style:"gap:8px;margin-top:6px"}, avatar(a,true), h("div",{style:"min-width:0"}, h("div",{style:"font-weight:600;font-size:13px"}, nm(a)),
+      h("div",{class:"small muted",style:"white-space:nowrap;overflow:hidden;text-overflow:ellipsis"}, doing ? "Now: "+doing : a.title))));
+}
+function vScreens(){
+  const sel = screenSel ? agent(screenSel) : null;
+  const list = everyone().slice().sort((x,y) => ((screenItems(y.id)[0]||{}).time || "").localeCompare((screenItems(x.id)[0]||{}).time || ""));
+  return [
+    h("h1",{},"Screens"), h("p",{class:"sub"},"What is on each employee's computer: the web pages they read, the documents and slides they write, and the mail they send to each other. Everything shown here is real work saved by the company. Click a screen to look closer."),
+    LIVE.on ? engineNote() : offlineNote(),
+    sel ? h("div",{class:"card"}, h("div",{class:"idea-head"}, h("div",{class:"row"}, avatar(sel), h("div",{}, h("h2",{style:"margin:0"}, nm(sel)+"'s computer"), h("div",{class:"small muted"}, sel.title+" · "+(LIVE.statuses[sel.id] || "")))),
+        h("button",{class:"btn",onclick:()=>{ screenSel = ""; render(); }},"Back to all screens")),
+      h("div",{class:"grid",style:"grid-template-columns:minmax(0,3fr) minmax(260px,2fr);margin-top:12px"}, monitor(sel, true),
+        h("div",{}, h("h3",{},"Everything on this computer today"), h("div",{class:"feed",style:"max-height:60vh"},
+          screenItems(sel.id).slice(0,60).map((it,i) => h("div",{class:"view",style:"cursor:pointer;margin:4px 0",onclick:()=>{ SCRN.pick = i; render(); }},
+            h("div",{class:"small muted"}, new Date(it.time).toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"})+" · "+({web:"🌐 web page",document:"📝 document",file:"📂 file",slides:"📊 slides",tell:"✉️ mail",chat:"💬 chat",room:"📅 booking",work:"👥 meeting",deliverable:"📦 deliverable",milestone:"🎉 milestone"}[it.kind] || it.kind)),
+            short(it.kind === "web" ? it.detail : it.kind === "slides" ? it.slide.title : it.text, 120)))))))
+      : h("div",{class:"monitors"}, list.map(a => monitor(a, false)))
+  ];
+}
+const SCRN = {pick:0};
+function vDeliverables(){
+  const TYPE = {document:"Document", content:"Content to post", email:"Email to send", action:"Action for you", milestone:"Milestone"};
+  const url = f => "/files/"+f.split("/").map(encodeURIComponent).join("/");
+  const mark = async (id, done) => { try{ await post("/api/deliverables/done",{id, done}); }catch(e){ toast("Could not save: "+e.message); } render(); };
+  const card = x => { const a = agent(x.by);
+    return h("div",{class:"card"},
+      h("div",{class:"idea-head"}, h("div",{}, h("div",{class:"small muted"}, (TYPE[x.type]||x.type)+" · "+new Date(x.time).toLocaleString()+" · from "+label(a)), h("h2",{style:"margin:0"},x.title)),
+        h("span",{class:"pill "+(x.status === "done" ? "approved" : "hold")}, x.status === "done" ? "DONE BY YOU" : "WAITING FOR YOU")),
+      x.todo ? h("div",{class:"view",style:"border-color:"+a.color}, h("b",{},"What you have to do: "), x.todo) : null,
+      h("div",{class:"actions"},
+        x.file ? h("button",{class:"btn",onclick:()=>{ openFile = null; const f = FILES.find(y => y.path === x.file); tab = "documents"; render(); if (f) [...document.querySelectorAll("#main .log")].find(r => r.textContent.includes(f.path.split("/").pop()))?.querySelector("button")?.click(); }},"Open the file") : null,
+        x.file ? h("a",{class:"pill",href:url(x.file)+"?download=1"},"Download") : null,
+        h("button",{class:"btn"+(x.status === "done" ? "" : " primary"),onclick:()=>mark(x.id, x.status !== "done")}, x.status === "done" ? "Mark as not done" : "I have done this"))); };
+  const open = DELIV.filter(x => x.status === "open").reverse(), done = DELIV.filter(x => x.status === "done").reverse();
+  return [
+    h("h1",{},"Deliverables"), h("p",{class:"sub"},"The company can only read the outside world. Whatever must be done outside (register a domain, post a video, send an email to a client) is prepared here with clear steps, and you do it yourself."),
+    open.length ? open.map(card) : h("div",{class:"card muted"},"Nothing is waiting for you. When a team finishes something that needs your action outside the company, it appears here."),
+    done.length ? [h("h2",{style:"margin-top:22px"},"Done"), done.map(card)] : null
+  ];
+}
+function vDocuments(){
+  const url = f => "/files/"+f.path.split("/").map(encodeURIComponent).join("/");
+  const kind = f => { const e = f.path.split(".").pop().toLowerCase();
+    return ["mp4","webm","mov"].includes(e) ? "video" : ["png","jpg","jpeg","gif","webp"].includes(e) ? "image" : ["mp3","wav","m4a"].includes(e) ? "audio" : ["md","txt","csv","json","html","srt"].includes(e) ? "text" : "other"; };
+  const size = n => n > 1048576 ? (n/1048576).toFixed(1)+" MB" : n > 1024 ? Math.round(n/1024)+" KB" : n+" bytes";
+  const show = async f => { openFile = {f, text:"Loading…"}; render();
+    if (kind(f) === "text"){ try{ openFile.text = await (await fetch(url(f))).text(); }catch(e){ openFile.text = "Could not open the file: "+e.message; } render(); } };
+  const groups = {};
+  FILES.forEach(f => { const parts = f.path.split("/"), g = parts[0] === "social" ? "Social media content" : parts.length > 2 ? parts[1].replace(/-/g," ") : "Company"; (groups[g] = groups[g] || []).push(f); });
+  const o = openFile, k = o ? kind(o.f) : "";
+  return [
+    h("h1",{},"Documents"), h("p",{class:"sub"},"Everything the employees wrote or prepared, by department. Open a file here or download it. Put your own files in the folder documents\\founder and any employee can read them when you ask."),
+    o ? h("div",{class:"card"}, h("div",{class:"idea-head"}, h("div",{}, h("div",{class:"small muted"},o.f.path), h("h2",{style:"margin:0"},o.f.path.split("/").pop())),
+        h("div",{class:"actions",style:"margin:0"}, h("a",{class:"pill",href:url(o.f)+"?download=1"},"Download"), h("button",{class:"btn",onclick:()=>{openFile=null;render();}},"Close"))),
+      k === "video" ? h("video",{src:url(o.f),controls:"",style:"width:100%;max-height:70vh;margin-top:12px;border-radius:8px"})
+      : k === "image" ? h("img",{src:url(o.f),style:"max-width:100%;margin-top:12px;border-radius:8px"})
+      : k === "audio" ? h("audio",{src:url(o.f),controls:"",style:"width:100%;margin-top:12px"})
+      : k === "text" ? h("pre",{style:"white-space:pre-wrap;font:14px/1.5 Consolas,monospace;background:var(--bg);padding:14px;border-radius:8px;max-height:70vh;overflow:auto;margin:12px 0 0"},o.text)
+      : h("p",{class:"muted"},"This file type cannot be shown here. Use Download.")) : null,
+    Object.keys(groups).length ? Object.entries(groups).map(([g, files]) => h("div",{class:"card"}, h("h2",{style:"text-transform:capitalize"},g),
+        files.map(f => h("div",{class:"log",style:"align-items:center"}, h("div",{style:"flex:1;min-width:0"}, h("b",{},f.path.split("/").pop()), h("div",{class:"small muted"}, size(f.size)+" · "+f.modified.replace("T"," "))),
+          h("button",{class:"btn",onclick:()=>show(f)}, kind(f) === "video" ? "Play" : "Open"), h("a",{class:"pill",href:url(f)+"?download=1"},"Download")))))
+      : h("div",{class:"card muted"},"No documents yet. When an employee writes a plan, a script or research notes, it appears here.")
+  ];
+}
+function vProjects(){
+  const list = S.projects || [];
+  return [
+    h("h1",{},"Projects"), h("p",{class:"sub"},"Projects the CEO or a department head started on your instruction. Tell the CEO in the chat to start, change or stop one."),
+    list.length ? [...list].reverse().map(pr => h("div",{class:"card"},
+        h("div",{class:"idea-head"}, h("div",{}, h("div",{class:"small muted"},"Started "+pr.created+" by "+nm(agent(pr.createdBy || pr.owner))), h("h2",{style:"margin:0"},pr.name)), h("span",{class:"pill approved"},(pr.status || "active").toUpperCase())),
+        h("p",{},pr.goal),
+        h("div",{class:"row",style:"flex-wrap:wrap"}, h("span",{class:"small muted"},"Owner"), avatar(agent(pr.owner),true), h("b",{},nm(agent(pr.owner))),
+          (pr.members || []).length ? h("span",{class:"small muted",style:"margin-left:10px"},"Team") : null, (pr.members || []).map(m => { const e = avatar(agent(m),true); e.title = label(agent(m)); return e; }))))
+      : h("div",{class:"card muted"},"No projects yet. Go live and tell the CEO, for example: “Start a project to grow the YouTube channel, owned by Marketing.”")
+  ];
+}
+function vLegal(){
+  const head = agent("legal"), c = S.conduct || {policy:[],reviews:[]};
+  return [
+    h("h1",{},"Legal & Conduct"), h("p",{class:"sub"},"The legal team watches how every employee behaves in meetings, mail and chats, and gives feedback."),
+    h("div",{class:"card"}, h("div",{class:"row",style:"margin-bottom:10px"}, avatar(head), h("div",{style:"flex:1"}, h("h2",{style:"margin:0"},nm(head)+" · "+head.title), h("div",{class:"small muted"},"Team: "+team("legal").map(x => nm(x)+" ("+x.title+")").join(", "))),
+        h("button",{class:"btn",onclick:()=>{ mailSel="chat:legal"; CHAT.to="legal"; go("mail"); }},"Chat")),
+      h("p",{style:"margin:0"},head.bio)),
+    h("div",{class:"card"}, h("h2",{},"Code of conduct"), h("ol",{style:"margin:0;padding-left:20px"}, c.policy.map(p => h("li",{style:"margin-bottom:4px"},p)))),
+    h("div",{class:"card",style:"overflow-x:auto"}, h("h2",{},"Behaviour reviews"),
+      c.reviews.length ? h("table",{}, h("thead",{}, h("tr",{}, h("th",{},"Date"), h("th",{},"Employee"), h("th",{},"Result"), h("th",{},"Feedback"))),
+          h("tbody",{}, [...c.reviews].reverse().map(r => h("tr",{}, h("td",{style:"white-space:nowrap"},r.date), h("td",{}, h("b",{},nm(agent(r.agent))), h("div",{class:"small muted"},agent(r.agent).title)),
+            h("td",{}, h("span",{class:"pill "+RATING[r.rating]},(r.rating||"").toUpperCase())), h("td",{},r.feedback)))))
+        : h("p",{class:"muted",style:"margin:0"},"No reviews yet. The legal team reviews every employee at the end of each working day."))
+  ];
+}
+function vChannels(){
+  const plan = S.contentPlan, owner = plan ? agent(plan.owner) : null;
+  const safeUrl = u => /^https:\/\//.test(u || "") ? u : "";
+  return [
+    h("h1",{},"Channels"), h("p",{class:"sub"},"Where "+companyName()+" already speaks to the public, and how the board plans to use it."),
+    h("div",{class:"grid g2"}, (S.channels||[]).map(c => h("div",{class:"card",style:"margin:0"},
+      h("div",{class:"idea-head"}, h("div",{}, h("h2",{style:"margin:0"},c.name), h("div",{class:"muted"},c.handle || "Handle not set")),
+        safeUrl(c.url) ? h("a",{class:"pill",href:safeUrl(c.url),target:"_blank",rel:"noopener"},"Open channel") : h("span",{class:"pill hold"},"LINK NEEDED")),
+      h("div",{class:"facts"}, h("div",{class:"fact"},h("b",{},"Size"),c.stats), h("div",{class:"fact"},h("b",{},"Content"),c.about)),
+      h("div",{class:"view"}, h("b",{},"Role in the company: "), c.role)))),
+    plan && plan.items.length ? h("div",{class:"card",style:"margin-top:16px"}, h("div",{class:"row",style:"margin-bottom:10px"}, avatar(owner),
+        h("div",{}, h("div",{class:"small muted"},"Content plan from the "+owner.title), h("h2",{style:"margin:0"},"Next 90 days"))),
+      h("p",{},plan.summary), h("ol",{style:"margin:0;padding-left:20px"}, plan.items.map(i => h("li",{style:"margin-bottom:4px"},i)))) : null
+  ];
+}
+function vSocial(){
+  const owner = agent("marketing"), safeUrl = u => /^https:\/\//.test(u || "") ? u : "";
+  const PILL = {draft:"hold", ready:"", posted:"hold", verified:"approved"};
+  const LABEL = {draft:"DRAFT", ready:"READY FOR YOU TO POST", posted:"POSTED, NOT CHECKED", verified:"CHECKED: IT IS PUBLIC"};
+  const act = async (path, body, msg) => { try{ const d = await post(path, body); toast(d.error || msg); }catch(e){ toast("Could not save: "+e.message); } render(); };
+  const card = i => { const url = h("input",{type:"text",placeholder:"Paste the link of your post here"}); url.value = i.postedUrl || "";
+    return h("div",{class:"card"},
+      h("div",{class:"idea-head"}, h("div",{}, h("div",{class:"small muted"}, i.platform+" · prepared "+i.date), h("h2",{style:"margin:0"},i.title)),
+        h("span",{class:"pill "+(PILL[i.status]||"")}, LABEL[i.status] || i.status)),
+      h("div",{class:"facts"}, h("div",{class:"fact"},h("b",{},"Files"),i.folder || "No files yet"), h("div",{class:"fact"},h("b",{},"Format"),i.format || "-")),
+      i.caption ? h("details",{}, h("summary",{},"Caption and hashtags to copy"), h("p",{class:"small",style:"white-space:pre-wrap"},i.caption)) : null,
+      i.notes ? h("div",{class:"view"}, h("b",{},"Note from Marketing: "), i.notes) : null,
+      h("div",{class:"row",style:"margin-top:12px;flex-wrap:wrap"}, h("div",{style:"flex:1;min-width:200px"},url),
+        h("button",{class:"btn primary",onclick:()=>act("/api/social/posted",{id:i.id,url:url.value.trim()},"Link saved")},"I posted it"),
+        h("button",{class:"btn",onclick:()=>act("/api/social/check",{id:i.id},"Checked")},"Check on platform")),
+      safeUrl(i.postedUrl) ? h("p",{class:"small",style:"margin:8px 0 0"}, h("a",{href:safeUrl(i.postedUrl),target:"_blank",rel:"noopener"},"Open the post")) : null,
+      i.check ? h("div",{class:"view",style:"border-color:var(--"+(i.check.ok ? "ok" : i.check.ok === false ? "bad" : "warn")+")"},
+        h("b",{},"Last check ("+new Date(i.check.time).toLocaleString()+"): "), i.check.note) : null); };
+  return [
+    h("h1",{},"Social Media"), h("p",{class:"sub"},"The team prepares the content. You post it yourself. Nobody in the company has access to your accounts."),
+    h("div",{class:"card"}, h("div",{class:"row",style:"margin-bottom:10px"}, avatar(owner), h("div",{}, h("div",{class:"small muted"},"Owned by the "+owner.title), h("h2",{style:"margin:0"},"How it works"))),
+      h("p",{style:"margin:0"},SO.policy)),
+    SO.items.length ? [...SO.items].reverse().map(card) : h("div",{class:"card muted"},"No content prepared yet. Marketing adds content packs here during the working day.")
+  ];
+}
+
+/* ---------- System pages ---------- */
+function vIT(){
+  const p = S.platform || {status:[],backlog:[],runs:[]}, a = agent("it");
+  const msgs = C.threads.reduce((n,t) => n + t.messages.length, 0);
+  return [
+    h("h1",{},"IT & Platform"), h("p",{class:"sub"},"The dashboard, the website and the connection to Claude Code, owned by the "+a.title+"."),
+    h("div",{class:"card"}, h("h2",{},"System status"), h("div",{class:"facts"},
+      p.status.map(x => h("div",{class:"fact"}, h("b",{},x.label), x.value)),
+      h("div",{class:"fact"}, h("b",{},"Meetings recorded"), C.threads.length+" meetings · "+msgs+" messages"),
+      h("div",{class:"fact"}, h("b",{},"Founder inputs"), Object.keys(F.decisions).length+" business-case decisions · "+M.messages.filter(m => m.from === "founder").length+" chat messages"))),
+    h("div",{class:"card"}, h("h2",{},"Run log"), h("table",{}, h("thead",{},h("tr",{},h("th",{},"Date"),h("th",{},"Run"),h("th",{},"Tokens"))),
+      h("tbody",{}, [...p.runs].reverse().map(r => h("tr",{}, h("td",{},r.date), h("td",{},r.what), h("td",{},r.tokens)))))),
+    h("div",{class:"card"}, h("h2",{},"IT backlog"), h("ol",{style:"margin:0;padding-left:20px"}, p.backlog.map(b => h("li",{style:"margin-bottom:4px"},b))))
+  ];
+}
+function vActivity(){
+  return [ h("h1",{},"Activity Log"), h("p",{class:"sub"},"What each executive did, newest first."),
+    h("div",{class:"card"}, [...S.activity].reverse().map(l => { const a = agent(l.agent);
+      return h("div",{class:"log"}, avatar(a), h("div",{}, h("div",{class:"small muted"},label(a)+" · "+l.time), h("div",{},l.text))); })) ];
+}
+
+async function setLive(body){ try{ await post("/api/live", body); }catch(e){ toast("Could not change: "+e.message); } render(); }
+const offlineNote = () => LIVE.on ? null : h("div",{class:"view",style:"border-color:var(--warn);margin:0 0 14px"},
+  h("b",{},"The company is offline. "), "Nobody is working and nobody can answer. Press ", h("b",{},"Go live"), " (top left) to open the office.");
+function renderNav(){
+  document.getElementById("liveBox").replaceChildren(
+    h("button",{class:"btn "+(LIVE.on ? "sel-rejected" : "primary"),style:"width:100%;font-weight:700",onclick:()=>setLive({on:!LIVE.on})},
+      LIVE.on ? [h("span",{class:"live-dot",style:"background:#fff"}), "LIVE · Go offline"] : "▶  Go live"),
+    h("div",{class:"small",style:"opacity:.7;padding:6px 4px 0"}, LIVE.on ? "The company is working." : "Offline. Nobody is working."));
+  document.getElementById("brand").textContent = companyName();
+  document.getElementById("brandSub").textContent = S.company.stage;
+  document.getElementById("tagline").textContent = S.company.tagline;
+  document.title = companyName() + " HQ";
+  const badges = {deliverables: DELIV.filter(x => x.status === "open").length, ideas: S.ideas.filter(i => !decision(i.id).status).length, founder: pendingList().length, mail: pendingList().length};
+  const nav = document.getElementById("nav"); nav.replaceChildren();
+  for (const [group, items] of NAV){
+    nav.append(h("div",{class:"nav-group"},group));
+    for (const [id,name] of items)
+      nav.append(h("button",{class: tab===id?"on":"", onclick:()=>go(id)}, name, badges[id] ? h("span",{class:"badge"},badges[id]) : null));
+  }
+  document.getElementById("sideFoot").textContent = everyone().length + " people · " + (LIVE.on ? "live" : "offline");
+}
+// The words an employee has written so far, without the command lines meant for the server.
+function typedText(id){
+  return (TYPING[id] || "").split("\n")
+    .filter(x => !/^\W*(PROPOSAL|READ|RELAY|TELL|BOOK ROOM|NEW PROJECT|SET ROLE|DELIVERABLE|DOCUMENT|END DOCUMENT)\b/i.test(x)).join("\n");
+}
+// While someone is writing, only their words change. Rebuilding the whole page for that would
+// restart every animation on it, so the text is written straight into the bubble instead.
+function renderTyping(){
+  const box = document.getElementById("typingNow");
+  if (!box) return false;
+  const id = box.getAttribute("data-for");
+  if (!TYPING[id]) return false;
+  const text = typedText(id);
+  if (box.textContent !== text){
+    box.textContent = text;
+    const feed = document.getElementById("chat");
+    if (feed && feed.scrollHeight - feed.scrollTop - feed.clientHeight < 80) feed.scrollTop = feed.scrollHeight;
+  }
+  return true;
+}
+function render(){
+  if (VOICE.on && (tab !== "mail" || mailSel !== "chat:"+VOICE.id)){ VOICE.on = false; stopVoice(); return; }   // leaving the chat ends the voice talk
+  renderNav();
+  const views = {campus:vCampus, office:vOffice, mail:vMail, meetings:vMeetings, founder:vFounder, ideas:vIdeas, social:vSocial, control:vControl, screens:vScreens, deliverables:vDeliverables, documents:vDocuments, projects:vProjects, departments:vDepartments, agents:vAgents, legal:vLegal, channels:vChannels, it:vIT, activity:vActivity};
+  const main = document.getElementById("main");
+  const typing = document.activeElement, keep = typing && ["chatInput","roomInput"].includes(typing.id) ? {id:typing.id, from:typing.selectionStart, to:typing.selectionEnd} : null;
+  const fresh = render.last !== tab;
+  if (fresh){ render.last = tab; main.classList.remove("enter"); void main.offsetWidth; main.classList.add("enter");
+    clearTimeout(render.enterT); render.enterT = setTimeout(() => main.classList.remove("enter"), 800); }   // only the first paint of a page slides in
+  // Swap the page only when it really differs. Replacing identical content would restart every
+  // animation on it two or three times a second, which is what made the movement jump.
+  const built = document.createElement("div");
+  built.append(...views[tab]().flat(3).filter(x => x != null && x !== false));
+  const same = !fresh && built.innerHTML === render.html;
+  render.html = built.innerHTML;
+  if (!same) main.replaceChildren(...built.childNodes);
+  const drawn = document.createElement("div");
+  drawn.append(...(profileId ? profile(profileId) : []), ...(ROOMV.open && (tab === "office" || tab === "campus") ? roomWindow() : []),
+    ...(CELEB.text ? [h("div",{class:"celebrate"}, [..."🎉✨🎊🥳🎉✨🎊🎉🥳✨🎊🎉"].map((c,i) => h("span",{style:"left:"+(4+i*8)+"%;animation-delay:"+(i%5)*0.35+"s"},c)),
+      h("div",{class:"celebrate-card"}, h("div",{style:"font-size:34px"},"🎉"), h("h2",{style:"margin:6px 0"},"The team is celebrating"), CELEB.text))] : []));
+  if (drawn.innerHTML !== render.drawerHtml){          // same rule for the meeting room window
+    render.drawerHtml = drawn.innerHTML;
+    document.getElementById("drawer").replaceChildren(...drawn.childNodes);
+  }
+  if (keep){ const box = document.getElementById(keep.id);   // the box was rebuilt: give the cursor back
+    if (box && document.activeElement !== box){ box.focus(); try{ box.setSelectionRange(keep.from, keep.to); }catch(e){} } }
+}
+setInterval(tick, 3200); setInterval(sync, 2500);
+setInterval(() => { if (CHAT.busy || M.busy || C.threads.some(x => x.status === "live")) sync(); }, 900);   // follow writing and live meetings closely
+window.addEventListener("resize", drawWires);
+load().catch(e => { document.getElementById("main").textContent = "Could not load company data: " + e.message; });
+</script>
+</body>
+</html>
