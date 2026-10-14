@@ -848,7 +848,7 @@ function roomWindow(){
       onclick:()=>{ if (id === "founder") return; ROOMV.pin = ROOMV.pin === id ? "" : id; render(); const b = document.getElementById("roomInput"); if (b) b.focus(); },
       style:"left:"+(50+43*Math.cos(ang))+"%;top:"+(50+40*Math.sin(ang))+"%;--c:"+a.color+";cursor:pointer"},
       ROOMV.pin === id ? h("div",{class:"pin"},"📌") : null,
-      talking ? h("div",{class:"say",style:"width:210px"}, short(msg.text, 140)) : null, avatar(a), h("div",{class:"seat-name"}, first(a)), h("div",{class:"seat-role"}, id === "founder" ? "Founder" : a.title)); };
+      talking ? h("div",{class:"say",style:"width:210px"}, short(msg.text, 140)) : null, avatar(a), h("div",{class:"seat-name"}, first(a)), id === "founder" || named(a) ? h("div",{class:"seat-role"}, id === "founder" ? "Founder" : a.title) : null); };
   const tv = slide ? [ h("div",{class:"tv-top"}, h("span",{}, "ON SCREEN · slide "+(si+1)+" of "+slides.length+(slide.by ? " · presented by "+first(agent(slide.by)) : "")),
         h("span",{}, h("button",{class:"tvbtn",onclick:()=>{ROOMV.slide = Math.max(0, si-1);render();}},"‹"), h("button",{class:"tvbtn",onclick:()=>{ROOMV.slide = Math.min(slides.length-1, si+1);render();}},"›"),
           ROOMV.slide >= 0 ? h("button",{class:"tvbtn",style:"width:auto;padding:0 8px",onclick:()=>{ROOMV.slide=-1;render();}},"follow the talk") : null)),
@@ -946,7 +946,7 @@ function camApply(){
 }
 function camFit(){
   const c = document.getElementById("campus"); if (!c) return;
-  const wide = c.clientWidth > 1000 ? c.clientWidth - 346 : c.clientWidth;
+  const wide = window.innerWidth > 1000 ? c.clientWidth - 346 : c.clientWidth;   // the same rule as the CSS that keeps the side panel clear
   CAMV.zm = Math.max(.3, Math.min(1.1, Math.min(wide/1500, c.clientHeight/840))); camApply();
 }
 function camSet(change){ Object.assign(CAMV, change); CAMV.zm = Math.max(.25, Math.min(2, CAMV.zm)); camApply(); render(); }
